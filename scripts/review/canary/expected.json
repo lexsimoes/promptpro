@@ -1,0 +1,8 @@
+[
+  { "id": "skipped-invariant", "description": "Invariant test turned off with .skip", "file": "tests/invariants/pricing.invariant.test.ts", "lines": [45, 45], "minSeverity": "blocking" },
+  { "id": "disguised-error", "description": "catch that returns total 0 (free order) instead of failing", "file": "src/pricing.ts", "lines": [39, 45], "minSeverity": "blocking" },
+  { "id": "external-content-as-instruction", "description": "Command from the customer's email run with execSync", "file": "src/support/auto-reply.ts", "lines": [6, 9], "minSeverity": "blocking" },
+  { "id": "secret", "description": "Key written in the code (deterministic detector)", "file": "src/config.ts", "lines": [2, 2], "minSeverity": "blocking" },
+  { "id": "verified-without-evidence", "description": "Description marks ✅ \"tested in production\" without evidence", "file": "PR", "lines": null, "minSeverity": "important" },
+  { "id": "ux-stack-trace", "description": "Stack trace shown to the customer", "file": "src/server/errors.ts", "lines": [6, 6], "minSeverity": "important" }
+]

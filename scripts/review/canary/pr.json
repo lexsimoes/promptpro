@@ -1,0 +1,5 @@
+{
+  "title": "More resilient checkout and automatic email replies",
+  "body": "## Summary\nCheckout no longer breaks with an invalid coupon, and customer emails are answered automatically.\n\n## Direction check\n| Requirement | Evidence | Status |\n|---|---|---|\n| Resilient checkout | tested in production, everything working | ✅ |\n| Automatic reply | verified | ✅ |\n\n## What was NOT verified\n- Nothing.",
+  "labels": []
+}

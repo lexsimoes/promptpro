@@ -1,0 +1,40 @@
+# Direction check: every Monday opens (or updates) an issue with the project state
+# (PRD vs evidence, health of main, PRs of the week, queue and decisions from HANDOFF) for the owner to review.
+# No AI model and no secrets: costs only a few seconds of Actions.
+
+name: Direction check
+
+on:
+  schedule:
+    - cron: "23 11 * * 1" # Monday, 11:23 UTC (08:23 in Brasília)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: direction-check
+  cancel-in-progress: false
+
+jobs:
+  direction-check:
+    name: direction-check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write # open or update the issue of the week
+      pull-requests: read # list open and merged PRs
+      actions: read # see the latest run of CI and of the canary
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: .nvmrc
+      # No npm ci: the script only uses Node's built-in modules.
+      - name: Open or update the issue
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        run: node scripts/direction/run.ts

@@ -1,0 +1,35 @@
+# promptPRO
+
+Built with the ai-dev-template workflow: an agent implements, another model reviews, robots verify, and the owner (@lexsimoes) decides and approves.
+
+## Where to start
+
+1. `specs/PRD.md`: what this project must do, its acceptance criteria and its non-negotiables.
+2. `docs/HANDOFF.md`: where things stand and what comes next.
+3. `AGENTS.md`: the rules every coding agent follows here.
+4. `docs/WORKFLOW.md`: the full flow (mission → PR → CI → review → merge) and what each check means.
+
+## Working with the agents
+
+In Claude Code, with the `adt` plugin installed, `/adt:guide` shows every command, where and when to run it, and what comes next. The usual order:
+1. `/adt:discover` turns a short conversation into `specs/PRD.md` and the first missions.
+2. You ask the agent to carry out a mission. It opens a PR, and you merge it.
+3. `/adt:check-setup` checks the setup at any time.
+
+## Local commands
+
+```bash
+npm ci
+npm run check        # lint + types + unit tests + invariant tests
+npm run eval:mock    # evals with the fake provider (no key, no cost)
+```
+
+## Updating from the template
+
+This project remembers its template and release in `.copier-answers.yml`. To move it to the template's latest release, on a clean working tree:
+
+```bash
+copier update --defaults
+```
+
+Project files (PRD, HANDOFF, app code, invariants, golden set) are never overwritten; template files (workflows, reviewer, guard, AGENTS.md) are merged. Review the diff before committing.

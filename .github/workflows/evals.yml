@@ -1,0 +1,110 @@
+# Evals in CI: when a ready PR (not a draft) touches AI files (aiPaths in evals/config.json),
+# runs the golden set with the real model, compares it with the target branch run now with the same model,
+# posts the table on the PR and fails below the thresholds, on a drop, or with a weakened golden set.
+# Key: secret EVAL_API_KEY (test project with a spending limit), never the production key or the reviewer's key.
+# No-key mode: "disabled" in the target branch's evals/config.json. Then no model runs, the key is not needed,
+# and the job only runs the golden set guard and posts an "off" notice. Without "disabled", a missing key fails.
+
+name: Evals
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review, labeled]
+
+permissions:
+  contents: read
+
+# A new push or label cancels the previous run and runs again (each run costs less than $0.01).
+concurrency:
+  group: evals-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  evals:
+    name: evals
+    # Ready PRs only. The job runs on every event, labels included: this check is required on main,
+    # and a skipped job would count as green over an earlier red.
+    if: github.event.pull_request.draft == false
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      pull-requests: write # post the table on the PR
+    env:
+      # Evals provider: repository variables, with DeepSeek as the default.
+      LLM_PROVIDER: ${{ vars.EVAL_PROVIDER || 'openai-compatible' }}
+      LLM_BASE_URL: ${{ vars.EVAL_BASE_URL || 'https://api.deepseek.com' }}
+      LLM_MODEL: ${{ vars.EVAL_MODEL || 'deepseek-v4-pro' }}
+      # Must be the same config as the app in production. "none" turns off DeepSeek's reasoning:
+      # in a short classifier, reasoning would use up the output limit before the answer.
+      LLM_EXTRA_BODY: ${{ vars.EVAL_EXTRA_BODY || '{"reasoning_effort":"none"}' }}
+      EVAL_JUDGE: ${{ vars.EVAL_JUDGE || '0' }}
+    steps:
+      - name: Fork PR
+        # Forks do not get secrets: the evals do not run and the check stays red, never green by omission.
+        if: github.event.pull_request.head.repo.full_name != github.repository
+        run: |
+          echo "::error::PR from a fork: the evals do not run (no access to secrets). To merge, bring the changes to a branch in this repository."
+          exit 1
+      - name: PR code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: pr
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Target branch (trusted thresholds and baseline)
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          path: base
+          ref: ${{ github.base_ref }}
+          persist-credentials: false
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version-file: pr/.nvmrc
+          cache: npm
+          cache-dependency-path: |
+            pr/package-lock.json
+            base/package-lock.json
+      - name: Does the PR touch AI?
+        id: ai
+        working-directory: pr
+        env:
+          BASE_REF: ${{ github.base_ref }}
+        run: |
+          CONFIG=../base/evals/config.json
+          [ -f "$CONFIG" ] || CONFIG=evals/config.json
+          node evals/touches-ai.ts --base "origin/$BASE_REF" --config "$CONFIG"
+      - name: Check the secret
+        if: steps.ai.outputs.touched == 'true' && steps.ai.outputs.disabled != 'true'
+        env:
+          EVAL_API_KEY: ${{ secrets.EVAL_API_KEY }}
+        run: |
+          if [ -z "$EVAL_API_KEY" ] && [ "$LLM_PROVIDER" != "mock" ]; then
+            echo "::error::The EVAL_API_KEY secret is not set (Settings → Secrets and variables → Actions)."
+            exit 1
+          fi
+      - name: Install
+        if: steps.ai.outputs.touched == 'true'
+        run: |
+          (cd pr && npm ci)
+          (cd base && npm ci)
+      - name: Target branch evals (baseline)
+        if: steps.ai.outputs.touched == 'true' && steps.ai.outputs.disabled != 'true'
+        # Continues even if it fails, so the next step posts the reason on the PR. The baseline is required:
+        # without it (e.g. API down), the next step fails. Run the job again when the API is back.
+        continue-on-error: true
+        working-directory: base
+        env:
+          LLM_API_KEY: ${{ secrets.EVAL_API_KEY }}
+          GITHUB_STEP_SUMMARY: ""
+        run: node evals/run.ts --out ../results-base
+      - name: PR evals
+        # In no-key mode, run.ts reads "disabled" from ../base and only runs the golden set guard.
+        if: steps.ai.outputs.touched == 'true'
+        working-directory: pr
+        env:
+          LLM_API_KEY: ${{ secrets.EVAL_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+        run: node evals/run.ts --base-dir ../base --baseline ../results-base --require-baseline --out ../results-pr --pr-comment

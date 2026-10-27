@@ -1,0 +1,103 @@
+{
+  "$comment": "Configuration of the automated reviewer (scripts/review). Read from the PR's target branch. REVIEW_API_BASE_URL and REVIEW_MODEL (repository variables) override baseUrl and model of the 'standard' and 'light' tiers; REVIEW_MODEL_VERSION pins the new model's version. pinnedVersion is the model each tier was measured with by the canary: the API has no dated ids, so the reviewer checks the provider's model list and the reply, and stops when an alias now serves another model. pinnedFingerprint (DeepSeek's system_fingerprint): when the backend changes, the report warns and the reviewer opens one issue per new fingerprint; the review goes on.",
+  "maxDiffChars": 150000,
+  "timeoutMs": 480000,
+  "maxFindings": 20,
+  "deepLabel": "deep-review",
+  "rereviewLabel": "re-review",
+  "approvalLabels": ["invariant-approved", "eval-approved", "test-approved"],
+  "afterReviewPush": "require-re-review",
+  "excludePaths": [
+    ".env",
+    ".env.*",
+    "**/.env",
+    "**/.env.*",
+    "**/*.pem",
+    "**/*.key",
+    "**/*.p12",
+    "**/*.pfx",
+    "**/id_rsa*",
+    "**/id_ed25519*",
+    "**/secrets/**",
+    "**/*secret*.json"
+  ],
+  "allowPaths": [".env.example", "**/.env.example"],
+  "ignorePaths": ["package-lock.json", "**/package-lock.json", "pnpm-lock.yaml", "yarn.lock", "scripts/review/canary/**"],
+  "sensitivePaths": [
+    "tests/invariants/**",
+    "evals/**",
+    "AGENTS.md",
+    "REVIEW.md",
+    ".github/**",
+    ".claude/**",
+    "scripts/**",
+    "plugins/**",
+    ".claude-plugin/**",
+    "package.json",
+    "**/*auth*",
+    "**/*login*",
+    "**/*session*",
+    "**/*payment*",
+    "**/*billing*",
+    "**/*checkout*",
+    "**/migrations/**",
+    "src/pricing.ts",
+    "src/ai/**"
+  ],
+  "trivial": {
+    "$comment": "Trivial PR = every file matches 'paths', none matches 'exceptPaths' or sensitivePaths. mode: 'light' (light tier) or 'none' (secret detectors only). Documents that agents read as instructions go in exceptPaths.",
+    "mode": "light",
+    "paths": ["README.md", "**/README.md", "CHANGELOG.md", "docs/**/*.md", "package-lock.json", "**/package-lock.json", "pnpm-lock.yaml", "yarn.lock"],
+    "exceptPaths": [
+      "AGENTS.md", "**/AGENTS.md", "REVIEW.md", "CLAUDE.md", "**/CLAUDE.md", "specs/**",
+      "docs/missions/**", "docs/HANDOFF.md", "docs/SKILLS.md", "**/SKILL.md", ".claude/**", ".cursor/**", ".agents/**"
+    ]
+  },
+  "autoFix": {
+    "$comment": "What the implementer may fix on its own after a review (AGENTS.md, \"Handle the review\"; scripts/review/triage.ts). These paths and caps only add to the defaults in scripts/review/lib.ts (invariants, golden set, eval thresholds, AGENTS.md, REVIEW.md, the invariant guard, migrations, .github, .claude, CODEOWNERS; 5 fixes, 10 files), never loosen them.",
+    "neverPaths": ["tests/invariants/**", "evals/golden/**", "evals/config.json", "AGENTS.md", "REVIEW.md", "scripts/guard-invariants.ts", "**/migrations/**", ".github/**", ".claude/**", "**/CODEOWNERS"],
+    "maxFixes": 5,
+    "maxFiles": 10
+  },
+  "tiers": {
+    "standard": {
+      "$comment": "deepseek-flash = DeepSeek-V4.1-Flash-1017, measured by the canary on 2026-10-23. DeepSeek has no dated id: its /models lists the name below, and a new release under the same name only changes the fingerprint (a warning and an issue). The measured alternative is deepseek-v4-pro (V4-Pro-0813): docs/WORKFLOW.md, \"DeepSeek options\".",
+      "provider": "openai-compatible",
+      "baseUrl": "https://api.deepseek.com",
+      "model": "deepseek-flash",
+      "pinnedVersion": "DeepSeek-V4.1-Flash",
+      "pinnedFingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+      "apiKeyEnv": "REVIEW_API_KEY",
+      "maxOutputTokens": 64000,
+      "pricePerMTok": { "input": 0.3, "output": 1.2, "cachedInput": 0.006 }
+    },
+    "light": {
+      "$comment": "Same model as standard, with short reasoning: for trivial PRs.",
+      "provider": "openai-compatible",
+      "baseUrl": "https://api.deepseek.com",
+      "model": "deepseek-flash",
+      "pinnedVersion": "DeepSeek-V4.1-Flash",
+      "pinnedFingerprint": "e72d3c7f663d3e1383b00b3884cb4501",
+      "apiKeyEnv": "REVIEW_API_KEY",
+      "maxOutputTokens": 16000,
+      "extraBody": { "reasoning_effort": "low" },
+      "pricePerMTok": { "input": 0.3, "output": 1.2, "cachedInput": 0.006 }
+    },
+    "sensitive": {
+      "provider": "anthropic",
+      "model": "claude-sonnet-5-5",
+      "pinnedVersion": "claude-sonnet-5-5",
+      "apiKeyEnv": "REVIEW_DEEP_API_KEY",
+      "maxOutputTokens": 64000,
+      "pricePerMTok": { "input": 2.0, "output": 10.0, "cachedInput": 0.1 }
+    },
+    "deep": {
+      "provider": "anthropic",
+      "model": "claude-opus-5-5",
+      "pinnedVersion": "claude-opus-5-5",
+      "apiKeyEnv": "REVIEW_DEEP_API_KEY",
+      "maxOutputTokens": 64000,
+      "pricePerMTok": { "input": 4.0, "output": 20.0, "cachedInput": 0.2 }
+    }
+  }
+}

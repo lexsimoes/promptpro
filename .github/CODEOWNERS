@@ -1,0 +1,15 @@
+# Files owned by the project owner.
+# The invariant guard accepts the `invariant-approved` label only from the owners of /tests/invariants/ listed here.
+# Code-owner review is not required by the protect-main ruleset under option A (agents use the owner's account).
+# Generated from the ai-dev-template Copier template (owner from the `github_owner` answer).
+
+/tests/invariants/   @lexsimoes
+/evals/              @lexsimoes
+/specs/PRD.md        @lexsimoes
+/.github/            @lexsimoes
+/scripts/guard-invariants.ts  @lexsimoes
+/scripts/review/     @lexsimoes
+/REVIEW.md           @lexsimoes
+/.claude/            @lexsimoes
+/AGENTS.md           @lexsimoes
+/CLAUDE.md           @lexsimoes
