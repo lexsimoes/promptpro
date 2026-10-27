@@ -3,13 +3,16 @@
 > This file is the "handoff": any agent (or you, a month from now) reads it first to know where things stand.
 > The agent updates it at the end of **every** mission.
 
-**Updated on:** [YYYY-MM-DD] · **By:** project created from the ai-dev-template Copier template
+**Updated on:** 2026-10-27 · **By:** product discovery (`/adt:discover`)
 
 ## Current state
 
-- Project created from the template. It still carries the template's demo app (`src/pricing.ts`, `src/ai/classify-message.ts`) and its example invariants and evals: replace them with this project's own as the first missions land.
-- CI: `quality`, `invariants` and `dependencies` run on every PR; `review` and `evals` need their keys (see `docs/WORKFLOW.md`).
-- Reviewer provider: `deepseek`. Conversation language: `pt-BR`.
+- Discovery done: `specs/PRD.md` (CA-01 to CA-08, INV-003 to INV-006) and missions 0001–0003 are written and waiting for the owner's approval in the discovery PR.
+- Approved clickable mockup in `prototype/mockup/` (throwaway: flow and look reference, Ideal Match tokens and fonts; no code is built on it).
+- The template's demo app (coupon store, message classifier, INV-001/INV-002, their evals and e2e tests) is still in the repository; mission 0001 removes it.
+- Template: ai-dev-template v0.5.1 (PR #1), which fixed the red `quality` check that projects from v0.5.0 were born with.
+- Secrets set (names only): `REVIEW_API_KEY`, `REVIEW_DEEP_API_KEY`, `EVAL_API_KEY`. Reviewer: DeepSeek, Claude on sensitive paths. Conversation language: `pt-BR`.
+- Way of working: Codex implements the missions; Claude Code writes the prompts for Codex, reviews its results, and writes the end-to-end tests (mission 0003).
 
 ## Last mission
 
@@ -17,16 +20,25 @@
 
 ## Queue (next items)
 
-1. Write `specs/PRD.md`: goal, users, verifiable acceptance criteria, non-negotiables.
-2. First mission in `docs/missions/` (copy `docs/missions/_TEMPLATE.md`).
+1. Mission 0001: remove the template's demo app.
+2. Mission 0003, item 1: e2e test plan `specs/e2e/generate-prompt.md` (before mission 0002's code).
+3. Mission 0002: generate a prompt (model prototype, technical proposal, golden set, invariants INV-003 to INV-006, UI).
+4. Mission 0003, items 2–4: end-to-end tests, after 0002 is merged.
+
+Invariant tests still to create: INV-003, INV-004, INV-005, INV-006, all with mission 0002.
 
 ## Pending decisions (owner)
 
-- Turn on the `protect-main` ruleset (`.github/rulesets/protect-main.json`; steps in `docs/WORKFLOW.md`).
-- Register the secrets the chosen providers need (in your own terminal, never in a chat): `gh secret set REVIEW_API_KEY`, `gh secret set EVAL_API_KEY`, with a spending limit on each key.
+- How many students per class and how many classes at once; where the course is hosted; one code per class (current plan) or one link per student later.
+- The generator model: chosen from mission 0002's prototype and evals.
+- Technology and hosting: from mission 0002's technical proposal.
+- Check the chosen AI provider's data-retention policy for requests before launch (not covered by the tests).
+- Issue #2: DeepSeek reports a new backend for the reviewer's `deepseek-flash`; reviews go on, but run the review canary to confirm it still catches the planted defects.
+- `EVAL_API_KEY` must belong to the provider of the chosen model; set `EVAL_PROVIDER`, `EVAL_BASE_URL` and `EVAL_MODEL` if it is not DeepSeek.
 
 ## Risks and warnings
 
+- A class link can leak: the code expiry, the usage limit and the provider's spending cap bound the damage.
 - Agents use the owner's GitHub account (option A in `docs/WORKFLOW.md`): only `AGENTS.md` stops an agent from merging or applying the owner's labels.
 
 ## How to resume
