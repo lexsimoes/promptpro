@@ -1,0 +1,25 @@
+[build]
+  edge_functions = "src/promptpro/edge"
+  command = "npm run build:promptpro"
+  publish = "dist-promptpro"
+[build.environment]
+  NODE_VERSION = "22.18.0"
+[functions]
+  directory = "src/promptpro/functions"
+  node_bundler = "esbuild"
+# Runtime override AWS_LAMBDA_JS_RUNTIME must be set in the UI, not here.
+# /api/generate rateLimit is exported by functions/generate.ts (60/60s/domain+IP).
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Content-Security-Policy = "default-src 'none'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'; object-src 'none'"
+    Cache-Control = "no-store"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer"
+    X-Frame-Options = "DENY"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    Strict-Transport-Security = "max-age=31536000"
+
+[[edge_functions]]
+  function = "host"
+  path = "/*"
