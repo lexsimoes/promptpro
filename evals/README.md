@@ -101,36 +101,32 @@ Variables: `LLM_PROVIDER`, `LLM_MODEL`, `EVAL_JUDGE_PROVIDER`, `EVAL_JUDGE_MODEL
 
 Existing cases are not edited or deleted to "pass": that is weakening a test (`AGENTS.md`, section 1.3).
 
-## generate-prompt (owner decision, 2026-10-28)
+## generate-prompt (owner decisions, 2026-10-28)
 
-20 simulated cases: 10 unchanged prototype ideas and 10 fresh ideas. `origin` and tags identify each group; `expected.ambiguities` is prose consumed through the case-specific Portuguese rubric, not keyword matching. Freeze input, expected, mustNotContain and rubric before the first real generation. CA-02 remains rulePassRate = 1.0 and judgeAverage >= 4.0.
+20 simulated cases: 10 prototype +10 new, marked origin/tags; no real students or untouched holdout. CA-02 rules1.0/judge>=3.5 (provisional until first real class). Cases/bans frozen before runs; only three diversion rubrics later corrected with owner approval. Both calibrations discarded; initial v2 plus one final owner sentence. Post-result disclosures, scores and literal diffs: docs/missions/0002-eval-report.md.
 
-There is no expected.category: the unused label is empty. The unchanged runner reports 100% accuracy for completed calls (including rule failures), or less on call errors; this is **N/A, not semantic accuracy**. On 2026-10-28 the owner delegated this choice after the agent proposed a neutral threshold: accuracy = 0.0. Rule pass rate still rejects every call error and invalid output.
-
-Product validation checks six nonempty sections, exactly once and in order; invalid output returns needsHuman and is never safe to act on. The independent character safety cap is 12,000 UTF-16 code units, deliberately generous for 1,500 output tokens, not an exact token conversion. All LLM calls have maxTokens = 1,500. The judge, not a keyword rule, evaluates expected ambiguities, intention, scope, Portuguese and at most six question marks under A esclarecer.
+No expected.category: accuracy **N/A**, neutral0.0 delegated by owner; runner displays100% on completed calls, including rule failures. Product validation: six nonempty sections exactly once/in order, invalid=>needsHuman; independent12,000 UTF-16-unit cap (not token conversion), generation maxTokens1500. Judge/rubric evaluates expected.ambiguities by meaning, intention/scope/Portuguese/<=6 questions, not keywords.
 
 ### Finite technology catalog
 
 `React`, `Next.js`, `NextJS`, `Vue`, `Angular`, `Svelte`, `Vite`, `Tailwind`, `Bootstrap`, `TypeScript`, `JavaScript`, `Python`, `PHP`, `Java`, `SwiftUI`, `Swift`, `SwiftData`, `Core Data`, `Kotlin`, `Flutter`, `React Native`, `Firebase`, `Supabase`, `PostgreSQL`, `Postgres`, `MySQL`, `SQLite`, `MongoDB`, `Redis`, `Prisma`, `Docker`, `Kubernetes`, `Vercel`, `Netlify`, `AWS`, `Azure`, `Google Cloud`, `Stripe`, `PayPal`, `Mercado Pago`, `WhatsApp`, `Telegram`, `Twilio`, `SendGrid`, `Resend`, `OpenAI`, `Gemini`, `DeepSeek`, `Claude`, `Codex`, `API`, `GraphQL`, `URL`, `HTTP`, `HTTPS`, `HTML`, `CSS`, `JSON`, `CSV`, `PDF`, `XML`, `WebSocket`, `OAuth`, `JWT`, `Android`, `iPhone`, `PWA`, `localStorage`, `IndexedDB`, `WebView`, `WordPress`, `WooCommerce`, `Shopify`, `Excel`, `Google Sheets`, `Notion`.
 
-For each idea, mustNotContain includes catalog terms absent from its text, case-insensitively. Aliases from the prototype: zap permits WhatsApp; iPhone permits iOS. Allowing a longer term also allows its catalog substrings (SwiftUI/Swift, for example), because the runner uses raw substring matching. This finite list is intentionally limited: unknown technologies and obfuscated spellings can escape; ordinary words containing a catalog term can produce false positives. It includes URL, including in questions. REST and iOS are deliberately not catalog entries: raw substrings collide with ordinary Portuguese (restantes and horários). This limitation was identified before any generation; iOS remains descriptive allowed metadata for the explicit iPhone alias. `allowed` is descriptive metadata; the runner actually enforces mustNotContain. Do not change the catalog/cases after seeing results to improve the score.
+mustNotContain bans catalog terms absent from the idea, case-insensitively, including URL in questions. Aliases: zap permits WhatsApp; iPhone permits iOS metadata. Longer allowed terms also permit catalog substrings (SwiftUI/Swift). Finite/raw-substring rules miss unknown/obfuscated technologies and may collide with ordinary words. REST/iOS excluded before generation because of restantes/horários collisions. allowed metadata is descriptive, not enforced. Never change catalog/cases after results to improve scores.
 
-### Local configuration and CI limitations
+### Configuration
 
-The unchanged compatible adapter reads LLM_API_KEY. Use a TEST key in the ignored .env. All generator clients must be created after setting LLM_EXTRA_BODY exactly to `{"temperature":0.2,"thinking":{"type":"disabled"}}`; generatePrompt refuses incompatible settings/body overrides for real clients. No global environment mutation occurs inside product code. The unchanged facade cannot set these parameters per request.
+TEST key only ignored .env; unchanged facade/adapter. Product requires real client openai-compatible:deepseek-flash and LLM_EXTRA_BODY exactly temperature0.2/thinking disabled, without overrides; create the client after setting it. No global mutation in product code.
 
 ```sh
 npm run eval:mock
 LLM_PROVIDER=openai-compatible LLM_BASE_URL=https://api.deepseek.com LLM_MODEL=deepseek-flash \
 LLM_EXTRA_BODY='{"temperature":0.2,"thinking":{"type":"disabled"}}' \
-EVAL_JUDGE_MODEL=deepseek-v4-pro EVAL_JUDGE_PROVIDER=openai-compatible \
-node --env-file=.env evals/run.ts --suite generate-prompt --judge --out evals/results/generate-prompt/initial
+EVAL_JUDGE_MODEL= EVAL_JUDGE_PROVIDER=openai-compatible \
+node --env-file=.env evals/run.ts --suite generate-prompt --judge --out evals/results/generate-prompt/example
 ```
 
-The existing mock only returns classifier JSON and remains untouched. The new eval target wraps only that mock response with an explicitly synthetic six-section fixture, still calling the budgeted mock client. This lets eval:mock exercise the runner and product validation without changing the demo or existing tests. The real-client path is unchanged. Direct product generation rejects classifier JSON. Mock passing is plumbing evidence only, never quality or ambiguity coverage. Before this new-target adaptation, the mock suite and four existing flow tests failed; no existing test was changed.
+New target alone adapts the classifier-shaped mock into a visibly synthetic six-section fixture, still calls the budgeted mock client. Direct product rejects classifier JSON. No existing mock/test changed; four initial flow failures resolved in new target. Mock pass proves plumbing only.
 
-Each real round is 20 generator + 20 judge calls (40 <= unchanged maxCalls 60); no retries. At most two prompt-only calibration rounds after the initial run: maximum 120 chat calls across three separately capped runs. The judge uses the same global temperature/thinking settings, but a separate model via EVAL_JUDGE_MODEL.
+40 calls/run (20 generator+20 judge), maxCalls60 unchanged, no retries; no paid repeat without authorization. Historical Pro-judge runs differ from final Flash/Flash. CI does not map EVAL_JUDGE_MODEL/PROVIDER; owner-set EVAL_MODEL=deepseek-flash, EVAL_JUDGE=1, EVAL_EXTRA_BODY as above verified read-only. Local blank judge model emulates CI absent override. Same protocol, stochastic scores; no agent workflow/variable change.
 
-The current CI workflow DOES NOT map repository variable EVAL_JUDGE_MODEL (or EVAL_JUDGE_PROVIDER) into the environment. Setting that repository variable alone does nothing. It maps EVAL_MODEL, EVAL_EXTRA_BODY and EVAL_JUDGE. Without a separately authorized workflow update, CI cannot establish the requested Pro-versus-Flash judge setup through repository variables alone; no workflow is changed here. Owner must set EVAL_MODEL=deepseek-flash and EVAL_EXTRA_BODY to the configuration above for real generation; EVAL_JUDGE defaults to 0 (judge not enforced). A CI green/skipped result therefore is not proof of CA-02 judge quality.
-
-Sources checked 2026-10-28 (Context7 quota exhausted): [DeepSeek thinking parameters](https://api-docs.deepseek.com/guides/thinking_mode/) and [pricing](https://api-docs.deepseek.com/quick_start/pricing/). Generator deepseek-flash; judge deepseek-v4-pro. Peak USD/million input-miss/output: Flash 0.30/1.20; Pro 1.32/3.96; off-peak 0.15/0.60 and 0.66/1.98. Cached input: Flash 0.006 peak/0.003 off-peak; Pro 0.044/0.022. The runner's single-model price estimate combines judge tokens at the generator price, so it is not the correct mixed-model cost; report actual per-model usage separately.
+Official docs checked2026-10-28 (Context7 quota exhausted): [thinking](https://api-docs.deepseek.com/guides/thinking_mode/), [pricing](https://api-docs.deepseek.com/quick_start/pricing/). USD/million hit/miss/output: Flash peak .006/.30/1.20, off-peak .003/.15/.60; Pro peak .044/1.32/3.96, off-peak .022/.66/1.98. Report uses actual usage, not billing; runner's miss-only/mixed-model estimate differs.

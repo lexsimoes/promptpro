@@ -52,7 +52,7 @@
       "thresholds": {
         "accuracy": 0.0,
         "rulePassRate": 1.0,
-        "judgeAverage": 4.0
+        "judgeAverage": 3.5
       },
       "maxDropFromBaseline": 0.05
     }

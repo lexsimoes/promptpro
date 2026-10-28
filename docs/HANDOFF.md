@@ -3,7 +3,7 @@
 > This file is the "handoff": any agent (or you, a month from now) reads it first to know where things stand.
 > The agent updates it at the end of **every** mission.
 
-**Updated on:** 2026-10-28 · **By:** mission 0002 (items 1 and 2 closed; item 3 awaits review, CA-02 failed)
+**Updated on:** 2026-10-28 · **By:** mission 0002 items 1–3
 
 ## Current state
 
@@ -14,42 +14,37 @@
 - Template: ai-dev-template v0.5.1 (PR #1), which fixed the red `quality` check that projects from v0.5.0 were born with.
 - Secrets set (names only): `REVIEW_API_KEY`, `REVIEW_DEEP_API_KEY`, `EVAL_API_KEY`. Reviewer: DeepSeek, Claude on sensitive paths. Conversation language: `pt-BR`.
 - Way of working: Codex implements the missions; Claude Code writes the prompts for Codex, reviews its results, and writes the end-to-end tests (mission 0003).
-- Generator: DeepSeek V4 Flash, chosen by the owner on 2026-10-28; mission 0002 item 1 validates it rather than comparing providers. Authenticated discovery confirms `deepseek-flash` (current V4.1-Flash backend; the original V4 Flash is retired).
+
+## Mission 0002 delivery (PR #6)
+
+Owner-selected DeepSeek V4 Flash (deepseek-flash, current V4.1 backend); generator/section validator +20 simulated golden cases. Initial v2 plus exact final owner sentence; both earlier calibrations discarded/report-only. Three diversion rubrics corrected after old judge penalized correct refusal; other cases/bans unchanged. Final one-run result: rules20/20, Flash judge3.95 (prototype4/new3.9), 40 calls, zero failures/retries; estimated USD .008408772. CA-02 minimum1.0/3.5 provisional until first real class; accuracy N/A/neutral0 delegated. [Report](missions/0002-eval-report.md) preserves historical failures/costs and post-result changes. Same CI protocol may score differently. Raw records ignored/local; no human review or untouched holdout.
+
+Approved [technical proposal](missions/0002-technical-proposal.md): vanilla TS/CSS, Vite8.3.5 dev-only, NetlifyFree, no Redis/storage. Best-effort memory class counters reset/not shared; domain+IP60/60s; separate USD5 prepaid/auto-rechargeOFF spending boundary; 402 preserves idea. Expiring codes/redeployment revocation (~1min/15credits). Canonical getprompt.pro host only; public-repo Require approval/Contains secret values, TEST previews only. No provisioning/dependency added. Verify actual compute10credits/GB-hour, runtime, body logging, secret controls, host enforcement, DNS/HTTPS/Preview before launch.
+
+Fresh check155 unit/8 invariants passes. Mock plumbing only; four initial flow failures fixed solely in new target, no existing test/demo change. Dataless dependencies read/materialized without installation. No endpoint/UI/production invariants/retention/billing verified. Next mission0004 owns remaining product acceptance; automatic review/check state in PR #6. Never merge or apply owner labels.
 
 ## Last mission
-
-- Mission 0002 item 3 delivered for owner review in draft PR #6: new generator/section validator, target, 20 simulated golden cases and Portuguese rubrics; no template runner/library edits. Rules: 20/20 in every round. Judge: initial 3.65, calibration 1 3.50, calibration 2 3.40 (minimum 4.0); **CA-02 failed; no more calibration rounds**. Per-case tables, worst-case excerpts, contradictory judge reasons and per-model costs: `docs/missions/0002-eval-report.md`. Total 120 calls across three runs (40 of max 60 each), estimated USD 0.053114472, no retries. The last calibrated prompt is retained for review, not approved. Full responses, logs and prompt diffs remain local in ignored `evals/results/generate-prompt/`.
-
-- Mission 0002 item 2 approved by the owner on 2026-10-28, draft PR https://github.com/lexsimoes/promptpro/pull/6: Netlify Free, Vite 8.3.5 dev-only, no Redis/storage. Per-class counters are best effort in process memory (cold-start/restart reset; not shared across instances). Native `/api/generate` limit: 60/60 s/domain+IP. Hard spending boundary: USD 5 prepaid in a production DeepSeek account separate from the reviewer, auto-recharge OFF; generic 402 preserves the idea. Codes last the class duration; revocation changes `CLASS_CODES_JSON` and redeploys (~1 minute estimate, 15 production-deploy credits). Production must refuse Host other than `getprompt.pro`. Public-repo sensitive variable policy: Require approval; keys marked Contains secret values; previews use low-balance TEST credentials/test codes only. Exact UI names and pricing discrepancy are documented in `docs/missions/0002-technical-proposal.md`. No infrastructure/dependency was provisioned.
-
-- Mission 0002 item 1 closed by the owner on 2026-10-28: `deepseek-flash` approved despite failed criteria. V1: ambiguities 29/40 (72.5%). V2: 38/40 (95%), but one URL mention, one conservative mild feature addition, scope-proposing items 25 to 33, and 9/20 outputs with >6 question marks. V2 is the initial prompt; no more prototype rounds. Calibration moves to item 3, CA-02 unchanged. Compact evidence: `prototype/model-choice/REPORT.md`; raw outputs stay local. Total estimated cost USD 0.010287576. Assessment: leitura pelo agente (Codex); ainda sem revisão humana.
 
 - Mission 0003, item 1 (2026-10-27): end-to-end test plan `specs/e2e/generate-prompt.md`, written by Claude Code before mission 0002's code. It lists what mission 0002 must provide for the tests (e2e class codes, class-link format, deterministic mock, provider failure on demand, accessible names). Owner decision recorded in it: "Gerar nova versão" replaces edits without confirmation.
 
 ## Queue (next items)
 
-1. Mission 0002 item 3: owner approved the extension-only approach on 2026-10-28: no changes to evals/run.ts/lib.ts. Product section validation maps to needsHuman; finite technology catalog maps to mustNotContain; expected ambiguity coverage, scope, Portuguese and <=6 question marks are judged through rubric. 10 prototype + 10 new simulated cases; rule rate 1.0 and judge >=4.0 unchanged; neutral accuracy 0.0 chosen under the owner's delegated decision (N/A without labels). Local Pro judge supported; CI does not map EVAL_JUDGE_MODEL. Item 3 is implemented/measured but CA-02 failed after two calibrations; review the report and golden set before any further action. No more calls or prompt changes; keep PR #6 draft. Endpoint, invariants and UI remain later items.
-2. Mission 0003, items 2–4: end-to-end tests, after 0002 is merged.
+1. Mission 0004: former 0002 items 4–9 (endpoint/access/limits, INV-003–006, UI), same authorizations/prohibitions/acceptance; one planned review stop before Ready. Built next to the demo.
+2. Mission 0003, items 2–4: end-to-end tests, after 0004 is merged.
 3. Mission 0001: remove the template's demo app, last, once promptPRO replaces each of its pieces (reordered on 2026-10-27: the template's tooling tests depend on the demo).
 
-Invariant tests still to create: INV-003, INV-004, INV-005, INV-006, all with mission 0002.
+Invariant tests still to create: INV-003, INV-004, INV-005, INV-006, all with mission 0004.
 
 ## Pending decisions (owner)
 
-- Confirm the domain registrar.
-- Create a separate production DeepSeek account, add USD 5 and disable automatic recharge; keep it separate from the reviewer's account.
-- Connect Netlify only when the preview stage starts.
-- Set `EVAL_MODEL=deepseek-flash` and `EVAL_EXTRA_BODY={"temperature":0.2,"thinking":{"type":"disabled"}}` for the generator in GitHub Actions; `EVAL_API_KEY` is already DeepSeek. CI does not map EVAL_JUDGE_MODEL, so a repository variable alone cannot select Pro as judge. EVAL_JUDGE defaults to 0; CI alone cannot prove the requested judge setup. No repository variable or CI file was changed.
-- Check DeepSeek's request-retention policy before launch; tests do not establish it.
+- How many students per class and how many classes at once; where the course is hosted; one code per class (current plan) or one link per student later.
+- Check DeepSeek request retention before launch; confirm registrar, connect Netlify at preview stage, and create separate USD 5 production account with auto-recharge OFF. No production/DNS without explicit approval after merge.
+- Issue #2: DeepSeek reports a new backend for the reviewer's `deepseek-flash`; reviews go on, but run the review canary to confirm it still catches the planted defects.
+- EVAL_API_KEY is DeepSeek TEST. Owner configured EVAL_MODEL=deepseek-flash, EVAL_JUDGE=1, EVAL_EXTRA_BODY={"temperature":0.2,"thinking":{"type":"disabled"}} (read-only verified). CI lacks EVAL_JUDGE_MODEL mapping; both roles Flash. Agent changed no variables/secrets.
 
 ## Risks and warnings
 
-- A class link can leak: expiry and redeploy-based revocation limit exposure. Per-class memory counters and IP limits are best effort; only the separate prepaid provider balance is the approved hard spending boundary. Verify canonical-host enforcement against old deployment URLs before launch.
-- Local dependency files were dataless placeholders; reading existing files materialized them without installing packages. Earlier check stalls were resolved. Final check: 155 unit tests and 8 invariants passed. Four original flow tests initially failed because the mock was classifier-shaped; the new target now supplies an explicitly synthetic response while preserving the budgeted mock call. No existing test was edited/skipped. Mock passes are plumbing evidence only.
-- Pro judge contradicted literal outputs (correct injection refusal graded 1; <=6 question marks called excessive). Scores/rubrics were preserved; no human review or untouched holdout validates this judge. Do not treat rule pass rate or mock/CI success as CA-02 approval.
-- Before launch, verify Netlify secret controls, actual compute rate, request-body logging, runtime compatibility, DNS/HTTPS and preview behavior. The reported 5-versus-10 compute discrepancy was not reproduced: both official pages show 10 credits/GB-hour on 2026-10-28; estimate retains 10.
-- Class size/concurrency/course platform are not known; shared classroom networks motivated the approved 60/60 s IP limit.
-- Issue #2: reviewer `deepseek-flash` backend changed; its canary still needs to confirm it catches planted defects.
+- A class link can leak: the code expiry, the usage limit and the provider's spending cap bound the damage.
 - Agents use the owner's GitHub account (option A in `docs/WORKFLOW.md`): only `AGENTS.md` stops an agent from merging or applying the owner's labels.
 
 ## How to resume

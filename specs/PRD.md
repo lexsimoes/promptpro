@@ -2,7 +2,7 @@
 
 > PRD = product requirements document. Short on purpose: if it goes past 2 pages, cut.
 
-**Owner:** @lexsimoes · **Last review:** 2026-10-27
+**Owner:** @lexsimoes · **Last review:** 2026-10-28
 
 ## 1. Goal
 
@@ -22,7 +22,7 @@ Each criterion must be **verifiable**: someone (or a test) can say yes or no.
 | ID | Criterion | How to verify |
 |---|---|---|
 | CA-01 | When a student describes an idea and clicks generate, they get a prompt in Portuguese with the sections Objective, Context, Requirements, Constraints, Completion criteria and To clarify | `tests/unit/generate-prompt.test.ts`; `e2e/generate-prompt.spec.ts` |
-| CA-02 | The prompt keeps the student's intent: it adds no feature or technology the idea did not ask for, and lists what the idea leaves undecided under To clarify. Measured by evals, not guaranteed: suite `generate-prompt` with rule pass rate = 1.0 and judge average ≥ 4.0 on the golden set | `npm run eval` (suite `generate-prompt`) |
+| CA-02 | The prompt keeps the student's intent: it adds no feature or technology the idea did not ask for, and lists what the idea leaves undecided under To clarify. Measured by evals, not guaranteed: suite `generate-prompt` with rule pass rate = 1.0 and judge average ≥ 3.5 on the golden set (owner decision, 2026-10-28; review this provisional threshold after the first class with real student ideas) | `npm run eval` (suite `generate-prompt`) |
 | CA-03 | When the student edits the generated prompt, the copy button copies the edited text | `e2e/generate-prompt.spec.ts` |
 | CA-04 | "Generate a new version" produces another prompt from the same original idea, which stays visible | `e2e/generate-prompt.spec.ts` |
 | CA-05 | When generation fails (provider error or usage limit), the idea stays in the field and the student can try again | `e2e/generate-prompt.spec.ts` |
