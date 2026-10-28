@@ -1,5 +1,5 @@
 # Changes here will be overwritten by Copier; NEVER EDIT MANUALLY
-_commit: v0.5.0
+_commit: v0.5.1
 _src_path: gh:lexsimoes/ai-dev-template
 conversation_language: pt-BR
 evals_with_model: true
