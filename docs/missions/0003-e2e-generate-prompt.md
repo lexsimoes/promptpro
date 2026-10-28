@@ -26,7 +26,7 @@ What the agent **may not** do (it stops and asks):
 
 ## Items
 
-- [ ] 1. **Before mission 0002's code starts:** the test plan `specs/e2e/generate-prompt.md`, from the acceptance criteria (name each CA-xx) and the screens in `prototype/mockup/`: valid link happy path, editing then copying, new version keeps the original idea, provider failure keeps the idea, usage limit keeps the idea, missing / unknown / expired code shows "link not active".
+- [x] 1. **Before mission 0002's code starts:** the test plan `specs/e2e/generate-prompt.md`, from the acceptance criteria (name each CA-xx) and the screens in `prototype/mockup/`: valid link happy path, editing then copying, new version keeps the original idea, provider failure keeps the idea, usage limit keeps the idea, missing / unknown / expired code shows "link not active".
 - [ ] 2. **After mission 0002 is merged:** the Playwright test agents write the tests from that plan.
 - [ ] 3. Run them in the `e2e` check; report any bug found as an issue with steps, without fixing the app here.
 - [ ] 4. Update the PRD direction-check rows and `docs/HANDOFF.md`.

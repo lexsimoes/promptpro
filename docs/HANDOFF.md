@@ -17,14 +17,13 @@
 
 ## Last mission
 
-- None yet.
+- Mission 0003, item 1 (2026-10-27): end-to-end test plan `specs/e2e/generate-prompt.md`, written by Claude Code before mission 0002's code. It lists what mission 0002 must provide for the tests (e2e class codes, class-link format, deterministic mock, provider failure on demand, accessible names). Owner decision recorded in it: "Gerar nova versão" replaces edits without confirmation.
 
 ## Queue (next items)
 
-1. Mission 0003, item 1: e2e test plan `specs/e2e/generate-prompt.md` (before mission 0002's code).
-2. Mission 0002: generate a prompt (model prototype, technical proposal incl. publishing on `getprompt.pro`, golden set, invariants INV-003 to INV-006, UI), built next to the demo.
-3. Mission 0003, items 2–4: end-to-end tests, after 0002 is merged.
-4. Mission 0001: remove the template's demo app, last, once promptPRO replaces each of its pieces (reordered on 2026-10-27: the template's tooling tests depend on the demo).
+1. Mission 0002: generate a prompt (model prototype, technical proposal incl. publishing on `getprompt.pro`, golden set, invariants INV-003 to INV-006, UI), built next to the demo.
+2. Mission 0003, items 2–4: end-to-end tests, after 0002 is merged.
+3. Mission 0001: remove the template's demo app, last, once promptPRO replaces each of its pieces (reordered on 2026-10-27: the template's tooling tests depend on the demo).
 
 Invariant tests still to create: INV-003, INV-004, INV-005, INV-006, all with mission 0002.
 
