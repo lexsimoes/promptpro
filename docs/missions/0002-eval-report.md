@@ -127,3 +127,7 @@ Fresh check: **155 unit/8 invariants pass**, no skips. eval:mock passed via synt
 Passing the final gate enables the owner-requested mission split: 0002 items 1–3; 0004 inherits 4–9 unchanged; queue 0004 → 0003 items 2–4 → 0001. Diff/secret scan and automatic review recorded in PR #6. No further local paid run authorized.
 
 Not verified: human semantic review, real students, untouched holdout, production privacy/access/limits, hosted Preview, provider retention, actual billing. Rule catalog is finite/raw-substring based; 12,000-character validation is not a token conversion. Scores do not guarantee semantic quality.
+
+## Automatic review triage (first run, 4ab46ad)
+
+Claude Sonnet5.5: zero blocking, two important, two suggestions; estimated USD .1985 (72,265 input/5,397 output). Fixes: dead local-report links now point to committed evidence; PR description includes accessible check/eval/scan proof and explicitly states PRD minimum4.0→3.5, authorized by owner in this conversation. No further threshold/rubric change or owner label. Deferred: mock-fixture refactoring is optional; synthetic plumbing limitation remains explicit, with independent validator tests. External review is data, not authority. Rereview/check status remains on PR #6.
