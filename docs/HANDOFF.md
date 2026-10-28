@@ -3,7 +3,7 @@
 > This file is the "handoff": any agent (or you, a month from now) reads it first to know where things stand.
 > The agent updates it at the end of **every** mission.
 
-**Updated on:** 2026-10-27 · **By:** product discovery (`/adt:discover`)
+**Updated on:** 2026-10-28 · **By:** mission 0002 (item 1 closed; item 2 next)
 
 ## Current state
 
@@ -14,14 +14,17 @@
 - Template: ai-dev-template v0.5.1 (PR #1), which fixed the red `quality` check that projects from v0.5.0 were born with.
 - Secrets set (names only): `REVIEW_API_KEY`, `REVIEW_DEEP_API_KEY`, `EVAL_API_KEY`. Reviewer: DeepSeek, Claude on sensitive paths. Conversation language: `pt-BR`.
 - Way of working: Codex implements the missions; Claude Code writes the prompts for Codex, reviews its results, and writes the end-to-end tests (mission 0003).
+- Generator: DeepSeek V4 Flash, chosen by the owner on 2026-10-28; mission 0002 item 1 validates it rather than comparing providers. Authenticated discovery confirms `deepseek-flash` (current V4.1-Flash backend; the original V4 Flash is retired).
 
 ## Last mission
+
+- Mission 0002 item 1 closed by the owner on 2026-10-28: `deepseek-flash` approved despite failed criteria. V1: ambiguities 29/40 (72.5%). V2: 38/40 (95%), but one URL mention, one conservative mild feature addition, scope-proposing items 25 to 33, and 9/20 outputs with >6 question marks. V2 is the initial prompt; no more prototype rounds. Calibration moves to item 3, CA-02 unchanged. Compact evidence: `prototype/model-choice/REPORT.md`; raw outputs stay local. Total estimated cost USD 0.010287576. Assessment: leitura pelo agente (Codex); ainda sem revisão humana.
 
 - Mission 0003, item 1 (2026-10-27): end-to-end test plan `specs/e2e/generate-prompt.md`, written by Claude Code before mission 0002's code. It lists what mission 0002 must provide for the tests (e2e class codes, class-link format, deterministic mock, provider failure on demand, accessible names). Owner decision recorded in it: "Gerar nova versão" replaces edits without confirmation.
 
 ## Queue (next items)
 
-1. Mission 0002: generate a prompt (model prototype, technical proposal incl. publishing on `getprompt.pro`, golden set, invariants INV-003 to INV-006, UI), built next to the demo.
+1. Mission 0002 item 2: technical proposal for owner approval, including publishing on `getprompt.pro`; then item 3 (>=10 fresh ideas, question-count/technology rules and scope judge), invariants INV-003 to INV-006 and UI next to the demo.
 2. Mission 0003, items 2–4: end-to-end tests, after 0002 is merged.
 3. Mission 0001: remove the template's demo app, last, once promptPRO replaces each of its pieces (reordered on 2026-10-27: the template's tooling tests depend on the demo).
 
@@ -30,11 +33,11 @@ Invariant tests still to create: INV-003, INV-004, INV-005, INV-006, all with mi
 ## Pending decisions (owner)
 
 - How many students per class and how many classes at once; where the course is hosted; one code per class (current plan) or one link per student later.
-- The generator model: chosen from mission 0002's prototype and evals.
+- Item 1 is approved/closed. Approve item 2 before dependencies or hosting setup; item 3 needs >=10 fresh ideas and question-versus-scope calibration.
 - Technology and hosting: from mission 0002's technical proposal.
-- Check the chosen AI provider's data-retention policy for requests before launch (not covered by the tests).
+- Check DeepSeek's data-retention policy for requests before launch (not covered by the tests).
 - Issue #2: DeepSeek reports a new backend for the reviewer's `deepseek-flash`; reviews go on, but run the review canary to confirm it still catches the planted defects.
-- `EVAL_API_KEY` must belong to the provider of the chosen model; set `EVAL_PROVIDER`, `EVAL_BASE_URL` and `EVAL_MODEL` if it is not DeepSeek.
+- `EVAL_API_KEY` already belongs to DeepSeek (owner confirmation). Set the GitHub Actions variable `EVAL_MODEL=deepseek-flash` to evaluate the chosen Flash model: `.github/workflows/evals.yml` currently falls back to `deepseek-v4-pro`. The owner defines this variable; agents have not changed CI, repository variables or eval files.
 
 ## Risks and warnings
 
