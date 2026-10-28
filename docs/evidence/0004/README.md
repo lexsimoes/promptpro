@@ -1,6 +1,6 @@
 # Mission 0004 — review evidence
 
-Local verification on 2026-10-28, using simulated ideas and the isolated mock. The PR remains a draft until the owner tests the hosted Preview. No credentials were read or copied, no Netlify account was connected, and no production deployment or owner label was applied.
+Local verification on 2026-10-28, using simulated ideas and the isolated mock. The PR remains a draft until the owner tests the hosted Preview. No credentials were read or copied and no owner label was applied by the agent. The owner authorized Netlify setup and the one-time import of the secret-free main branch; automatic production publishing was then locked before any environment variable was configured.
 
 The only new direct dependency is Vite 8.3.5, pinned as a development dependency. It builds the separate vanilla TypeScript/CSS client and local fonts into `dist-promptpro`; no runtime SDK was added. Existing demo files, existing tests, CI, AI source and eval thresholds are unchanged.
 
@@ -78,7 +78,15 @@ The project's dedicated security skills were unavailable; this review used the p
 
 No confirmed critical/high issue was found. Limits: class counters reset on cold starts and are not shared across instances; platform rate enforcement may lag. A browser timeout cannot cancel the existing facade's upstream request, which may still consume tokens. Hosted edge/runtime behavior, native rate-limit response headers, platform logs, provider retention and billing still need verification. Code revocation requires redeployment and checking old deploy hosts.
 
-## Owner-only Netlify Preview setup
+## Netlify provisioning status
+
+The owner authorized setup on 2026-10-28 and specifically confirmed the login terms and GitHub app authorization. The existing Netlify team is Viver de Sites. Project `promptpro` was unavailable, so the project was created as `lexsimoes-promptpro` and connected to `lexsimoes/promptpro`. The initial secret-free `main` import at e643a86 was published under the owner's bootstrap exception; **Auto Publishing Locked** was then confirmed in the UI. No DNS or custom domain was changed.
+
+The expected PR #7 hostname is `deploy-preview-7--lexsimoes-promptpro.netlify.app`. Seven non-secret variables were saved only for Deploy Previews; Production, Branch deploys, Preview Server/Agent Runners and Local development contexts were left empty. All scopes are used because scope selection requires a paid plan. The existing sensitive variable policy is **Require approval** for untrusted forks.
+
+`LLM_API_KEY` and `CLASS_CODES_JSON` are not configured yet. They remain owner-entered secrets; no model call is possible until the configuration is complete. The Preview build and hosted behavior are still pending. Keep the PR in draft.
+
+## Preview setup reference
 
 Variable names for the Deploy Previews context:
 
@@ -94,7 +102,7 @@ LLM_API_KEY
 AWS_LAMBDA_JS_RUNTIME
 ```
 
-1. Connect the owner's project with production auto-publishing locked, then enable this PR's Deploy Preview. If initial import forces production publication, stop. No production/DNS authorization is implied.
+1. The project is connected and automatic production publishing is locked. The one-time secret-free bootstrap was explicitly allowed by the owner; no further production or DNS operation is authorized.
 2. Use the build, publish and function/edge settings in `netlify.toml`. Build Node is pinned to 22.18.0. Configure the Node 22 runtime override in the UI and verify its patch version; it cannot be set in TOML.
 3. Select explicit preview mode with `APP_ENV`; set `PREVIEW_HOST` to this PR's exact Netlify hostname, without scheme, path or wildcard. Build-only `CONTEXT` is not used for runtime authorization.
 4. The owner alone copies the existing TEST key from their ignored `.env` into `LLM_API_KEY`. Configure the approved DeepSeek settings and only short-lived, low-limit TEST class entries using the `code`, `expiresAt`, `limit`, `active` schema. Never put real cohort codes in this preview.
@@ -106,4 +114,4 @@ Official documentation checked on 2026-10-28 after Context7's quota was exhauste
 
 ## Not verified
 
-Hosted Preview, its real-provider integration, fresh real-model/judge evaluation, Netlify edge/rate/secret settings and logs, DeepSeek retention and actual billing, complete WCAG/screen-reader accessibility and field performance. Formal promptPRO e2e automation remains mission 0003; the current CI e2e still measures the demo. Automatic review waits for Ready. No merge, tag, release or production deploy was performed.
+Hosted Preview, its real-provider integration, fresh real-model/judge evaluation, Netlify edge/rate/secret settings and logs, DeepSeek retention and actual billing, complete WCAG/screen-reader accessibility and field performance. Formal promptPRO e2e automation remains mission 0003; the current CI e2e still measures the demo. Automatic review waits for Ready. No merge, tag, release or product production deployment was performed. The separate secret-free main bootstrap and publishing lock are recorded above.
