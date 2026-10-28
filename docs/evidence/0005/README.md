@@ -38,9 +38,9 @@ All three mutated runs exited 1. Restoring the code exited 0 (3/3 access invaria
 
 ## Hosted verification and production prerequisites
 
-The new Preview must use APP_ENV=preview and PREVIEW_HOST matching its PR number; existing TEST-key secret may remain in Deploy Previews, entered privately by the owner. CLASS_CODES_JSON is no longer used by this branch. Native rate-rule deployment/enforcement and a real hosted generation are not yet verified. Do not run a burst/load test against a real provider to prove the quota.
+The new Preview must use APP_ENV=preview and PREVIEW_HOST matching its PR number; existing TEST-key secret may remain in Deploy Previews, entered privately by the owner. CLASS_CODES_JSON is no longer used by this branch. Preview #8 deployed successfully after a branch-specific PREVIEW_HOST override; the PR #7 host was preserved. At https://deploy-preview-8--lexsimoes-promptpro.netlify.app/ two real TEST-provider generations succeeded without a code; edited copy matched the clipboard and regeneration replaced edits with six sections. Native rule enforcement remains unverified. Do not run a burst/load test against a real provider to prove the quota.
 
-The owner merges reviewed changes; the agent never merges. Before public production: verify DeepSeek retention and prepaid cap/auto-recharge, provide the production LLM_API_KEY privately, configure APP_ENV=production and the provider variables in the Production context, connect getprompt.pro at the registrar, verify DNS/HTTPS and then publish the reviewed build. No credentials were read/copied and no production secrets were configured in this work.
+The owner merges reviewed changes; the agent never merges. Before public production: verify DeepSeek retention and prepaid cap/auto-recharge, provide the production LLM_API_KEY privately, configure APP_ENV=production and the provider variables in the Production context, connect getprompt.pro at the registrar, verify DNS/HTTPS and then publish the reviewed build. No credentials were read/copied and no production secrets were configured in this work. DNS lookup returned artemis.dns-parking.com / hermes.dns-parking.com; no DNS was changed.
 
 ## Documentation sources
 
