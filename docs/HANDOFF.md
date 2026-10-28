@@ -3,7 +3,7 @@
 > This file is the "handoff": any agent (or you, a month from now) reads it first to know where things stand.
 > The agent updates it at the end of **every** mission.
 
-**Updated on:** 2026-10-28 · **By:** mission 0002 (item 1 closed; item 2 next)
+**Updated on:** 2026-10-28 · **By:** mission 0002 (item 1 closed; item 2 awaiting review)
 
 ## Current state
 
@@ -18,13 +18,15 @@
 
 ## Last mission
 
+- Mission 0002 item 2: documentation-only proposal in `docs/missions/0002-technical-proposal.md`, draft PR https://github.com/lexsimoes/promptpro/pull/6. Recommends vanilla TypeScript/Vite + Netlify; Vercel Pro alternative. Strict production class quota needs an explicitly approved shared counter; no storage/hosting/dependency is approved or provisioned. Stop for owner review.
+
 - Mission 0002 item 1 closed by the owner on 2026-10-28: `deepseek-flash` approved despite failed criteria. V1: ambiguities 29/40 (72.5%). V2: 38/40 (95%), but one URL mention, one conservative mild feature addition, scope-proposing items 25 to 33, and 9/20 outputs with >6 question marks. V2 is the initial prompt; no more prototype rounds. Calibration moves to item 3, CA-02 unchanged. Compact evidence: `prototype/model-choice/REPORT.md`; raw outputs stay local. Total estimated cost USD 0.010287576. Assessment: leitura pelo agente (Codex); ainda sem revisão humana.
 
 - Mission 0003, item 1 (2026-10-27): end-to-end test plan `specs/e2e/generate-prompt.md`, written by Claude Code before mission 0002's code. It lists what mission 0002 must provide for the tests (e2e class codes, class-link format, deterministic mock, provider failure on demand, accessible names). Owner decision recorded in it: "Gerar nova versão" replaces edits without confirmation.
 
 ## Queue (next items)
 
-1. Mission 0002 item 2: technical proposal for owner approval, including publishing on `getprompt.pro`; then item 3 (>=10 fresh ideas, question-count/technology rules and scope judge), invariants INV-003 to INV-006 and UI next to the demo.
+1. Mission 0002 item 2: [technical proposal](missions/0002-technical-proposal.md) written and awaiting owner approval in draft PR #6; then item 3 (>=10 fresh ideas, question-count/technology rules and scope judge), invariants INV-003 to INV-006 and UI next to the demo.
 2. Mission 0003, items 2–4: end-to-end tests, after 0002 is merged.
 3. Mission 0001: remove the template's demo app, last, once promptPRO replaces each of its pieces (reordered on 2026-10-27: the template's tooling tests depend on the demo).
 
