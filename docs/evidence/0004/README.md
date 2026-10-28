@@ -27,7 +27,7 @@ Each change was made only in a disposable copy without `.env`, then restored. Al
 | INV-006 | Raise the input cap from 2000 to 3000 characters | `INV-006: 2000 characters reach the model, 2001/blank/invalid input never does` |
 | INV-006 | Raise the requested token cap from 1500 to 9000 | `INV-006 catches a dropped cap: every completion explicitly requests at most 1500 tokens` |
 
-The owner must apply `invariant-approved` for the four new invariant files. Existing invariant files are untouched.
+The owner applied `invariant-approved` for the four new files. The subsequent CI invariant guard passed. Existing invariant files are untouched.
 
 ## Direction check
 
@@ -43,7 +43,9 @@ A local pass does not establish hosted behavior.
 | CA-06 | Missing, unknown, expired, space/case-altered links and expiry boundary | Verified locally |
 | CA-07 | New, existing and absent choices reach the mock context | Verified locally |
 | CA-08 | Screenshot matrix, official fonts, contrast, keyboard and overflow checks | Verified locally |
-| INV-003 to INV-006 | Four new invariant files and the five violations above | Verified locally; owner label pending |
+| INV-003 to INV-006 | Four new invariant files and the five violations above | Verified locally; owner label applied |
+
+The stylesheet was reformatted into readable rules and declarations. Only whitespace changed; the built CSS and JavaScript have identical SHA-256 hashes before and after formatting. The PRD direction table now links to this README after the raw browser report was removed.
 
 ## Browser and screenshots
 

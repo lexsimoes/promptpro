@@ -1,7 +1,7 @@
 # Mission 0004: Generate endpoint and UI
 
 **Status:** in progress — implementation verified locally; owner review/Preview pending
-**Branch:** `mission/0004-generate-endpoint-and-ui` · **PR:** pending
+**Branch:** `mission/0004-generate-endpoint-and-ui` · **PR:** [#7](https://github.com/lexsimoes/promptpro/pull/7)
 **Created / approved by the owner:** 2026-10-28
 
 ## Goal

@@ -88,9 +88,9 @@ Updated on every mission, by the agent, in the mission's PR. Every Monday, the `
 |---|---|---|
 | CA-01 | `tests/unit/generate-prompt.test.ts` (local; hosted Preview pending) | ✅ |
 | CA-02 | `docs/missions/0002-eval-report.md` (local; hosted Preview pending) | 🟡 |
-| CA-03 | `docs/evidence/0004/browser-report.json` (local; hosted Preview pending) | ✅ |
-| CA-04 | `docs/evidence/0004/browser-report.json` (local; hosted Preview pending) | ✅ |
-| CA-05 | `docs/evidence/0004/browser-report.json` (local; hosted Preview pending) | ✅ |
+| CA-03 | `docs/evidence/0004/README.md` (local; hosted Preview pending) | ✅ |
+| CA-04 | `docs/evidence/0004/README.md` (local; hosted Preview pending) | ✅ |
+| CA-05 | `docs/evidence/0004/README.md` (local; hosted Preview pending) | ✅ |
 | CA-06 | `tests/invariants/access.invariant.test.ts` (local; hosted Preview pending) | ✅ |
 | CA-07 | `tests/unit/promptpro-server.test.ts` (local; hosted Preview pending) | ✅ |
 | CA-08 | `docs/evidence/0004/README.md` (local; hosted Preview pending) | ✅ |
