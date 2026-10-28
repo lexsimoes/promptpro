@@ -3,7 +3,7 @@
 > This file is the "handoff": any agent (or you, a month from now) reads it first to know where things stand.
 > The agent updates it at the end of **every** mission.
 
-**Updated on:** 2026-10-28 · **By:** mission 0002 items 1–3
+**Updated on:** 2026-10-28 · **By:** mission 0004 (local implementation; owner review pending)
 
 ## Current state
 
@@ -14,6 +14,12 @@
 - Template: ai-dev-template v0.5.1 (PR #1), which fixed the red `quality` check that projects from v0.5.0 were born with.
 - Secrets set (names only): `REVIEW_API_KEY`, `REVIEW_DEEP_API_KEY`, `EVAL_API_KEY`. Reviewer: DeepSeek, Claude on sensitive paths. Conversation language: `pt-BR`.
 - Way of working: Codex implements the missions; Claude Code writes the prompts for Codex, reviews its results, and writes the end-to-end tests (mission 0003).
+
+## Active: mission 0004, final review stop
+
+PR #6 merged at e643a86. Items 1–6 are implemented on `mission/0004-generate-endpoint-and-ui`; the mission's single PR stays in draft. It adds the shared class-gated handler, Node/Netlify adapters, whole-site edge host guard, UI and four new invariant files. Demo files, AI source, existing tests and CI are untouched. Vite 8.3.5 is development-only; fonts are official local WOFF2 files with complete OFL licenses. Local checks passed: 166 unit tests, 16 invariants and 20 mock eval cases. Five deliberate violations failed in a disposable copy. Browser flows were checked in both themes at 375, 768 and 1280 px; 32 captures at 375 and 1280 px are included. [Evidence, security review and Preview steps](evidence/0004/README.md).
+
+The owner must configure the Netlify Preview with explicit preview mode, its exact hostname, TEST codes and the existing TEST key, copied by the owner alone. Hosted behavior, platform logs and native rate limits remain unverified. The agent has not read or copied the key, connected Netlify, published production, changed DNS or applied owner labels. AI is unchanged: the last real quality run is PR #6 (judge 3.85); the current mock run verifies wiring only. Stop before Ready until the Preview works and the owner approves. Mission 0003 provides promptPRO e2e automation later. Keep this mission in one PR, below 140,000 reviewer-counted characters; raw logs remain outside the commit.
 
 ## Mission 0002 delivery (PR #6)
 
@@ -27,11 +33,11 @@ Owner selected deepseek-flash, initialv2+exact behavior-only sentence; two calib
 
 ## Queue (next items)
 
-1. Mission 0004: former 0002 items 4–9 (endpoint/access/limits, INV-003–006, UI), same authorizations/prohibitions/acceptance; one planned review stop before Ready. Built next to the demo.
+1. Mission 0004: implementation complete locally, awaits owner review/hosted Preview/Ready. Former 0002 items 4–9 (endpoint/access/limits, INV-003–006, UI), same authorizations/prohibitions/acceptance; one planned review stop before Ready. Built next to the demo.
 2. Mission 0003, items 2–4: end-to-end tests, after 0004 is merged.
 3. Mission 0001: remove the template's demo app, last, once promptPRO replaces each of its pieces (reordered on 2026-10-27: the template's tooling tests depend on the demo).
 
-Invariant tests still to create: INV-003, INV-004, INV-005, INV-006, all with mission 0004.
+Mission 0004 adds INV-003, INV-004, INV-005 and INV-006. Their tests pass locally; the owner must apply `invariant-approved`.
 
 ## Pending decisions (owner)
 

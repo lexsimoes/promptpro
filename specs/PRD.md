@@ -86,17 +86,17 @@ Updated on every mission, by the agent, in the mission's PR. Every Monday, the `
 
 | Requirement | Evidence | Status |
 |---|---|---|
-| CA-01 | | ⬜ |
-| CA-02 | | ⬜ |
-| CA-03 | | ⬜ |
-| CA-04 | | ⬜ |
-| CA-05 | | ⬜ |
-| CA-06 | | ⬜ |
-| CA-07 | | ⬜ |
-| CA-08 | | ⬜ |
-| INV-003 | | ⬜ |
-| INV-004 | | ⬜ |
-| INV-005 | | ⬜ |
-| INV-006 | | ⬜ |
+| CA-01 | `tests/unit/generate-prompt.test.ts` (local; hosted Preview pending) | ✅ |
+| CA-02 | `docs/missions/0002-eval-report.md` (local; hosted Preview pending) | 🟡 |
+| CA-03 | `docs/evidence/0004/browser-report.json` (local; hosted Preview pending) | ✅ |
+| CA-04 | `docs/evidence/0004/browser-report.json` (local; hosted Preview pending) | ✅ |
+| CA-05 | `docs/evidence/0004/browser-report.json` (local; hosted Preview pending) | ✅ |
+| CA-06 | `tests/invariants/access.invariant.test.ts` (local; hosted Preview pending) | ✅ |
+| CA-07 | `tests/unit/promptpro-server.test.ts` (local; hosted Preview pending) | ✅ |
+| CA-08 | `docs/evidence/0004/README.md` (local; hosted Preview pending) | ✅ |
+| INV-003 | `tests/invariants/access.invariant.test.ts` (local; hosted Preview pending) | ✅ |
+| INV-004 | `tests/invariants/server-secrets.invariant.test.ts` (local; hosted Preview pending) | ✅ |
+| INV-005 | `tests/invariants/student-content.invariant.test.ts` (local; hosted Preview pending) | ✅ |
+| INV-006 | `tests/invariants/model-limits.invariant.test.ts` (local; hosted Preview pending) | ✅ |
 
 Legend: ✅ done and verified · 🟡 partial · ⬜ not started · ❌ broken

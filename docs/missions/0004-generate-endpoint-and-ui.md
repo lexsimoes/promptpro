@@ -1,6 +1,6 @@
 # Mission 0004: Generate endpoint and UI
 
-**Status:** approved
+**Status:** in progress — implementation verified locally; owner review/Preview pending
 **Branch:** `mission/0004-generate-endpoint-and-ui` · **PR:** pending
 **Created / approved by the owner:** 2026-10-28
 
@@ -43,12 +43,12 @@ What the agent **may not** do (it stops and asks):
 
 Original items 4–9 are renumbered 1–6 below with their authorization, prohibitions and acceptance preserved. Reuse the generator/validator and new unit-test file from mission 0002; extend the product wiring rather than replacing approved tooling.
 
-- [ ] 1. Class-code check on the server and its invariant test `tests/invariants/access.invariant.test.ts` (INV-003, cases from the PRD).
-- [ ] 2. Generation endpoint with input and output caps, secrets kept on the server and no student text in logs, with `tests/invariants/model-limits.invariant.test.ts` (INV-006), `tests/invariants/server-secrets.invariant.test.ts` (INV-004) and `tests/invariants/student-content.invariant.test.ts` (INV-005).
-- [ ] 3. Prompt builder and its unit tests `tests/unit/generate-prompt.test.ts` (CA-01 sections, CA-07 new/existing choice).
-- [ ] 4. UI following `prototype/mockup/`: start screen (headline, optional new/existing choice, suggestions, idea box with counter), result (original idea, editable prompt, copy, new version, start over), copied, generation failure, link not active, usage limit. Light and dark, 375 px to 1280 px. The new/existing choice is a radio group (or toggle buttons), not links. Load all three fonts (the mockup only ships Instrument Serif). Informative text meets 4.5:1 contrast: use the mockup's darker `--ink-3`.
-- [ ] 5. Best-effort in-memory per-class limit + Netlify per-IP rate limit + prepaid balance as the spending ceiling, as in the approved proposal (CA-05 limit message keeps the idea).
-- [ ] 6. Update the PRD direction-check rows and `docs/HANDOFF.md`.
+- [x] 1. Class-code check on the server and its invariant test `tests/invariants/access.invariant.test.ts` (INV-003, cases from the PRD).
+- [x] 2. Generation endpoint with input and output caps, secrets kept on the server and no student text in logs, with `tests/invariants/model-limits.invariant.test.ts` (INV-006), `tests/invariants/server-secrets.invariant.test.ts` (INV-004) and `tests/invariants/student-content.invariant.test.ts` (INV-005).
+- [x] 3. Prompt builder and its unit tests `tests/unit/generate-prompt.test.ts` (CA-01 sections, CA-07 new/existing choice).
+- [x] 4. UI following `prototype/mockup/`: start screen (headline, optional new/existing choice, suggestions, idea box with counter), result (original idea, editable prompt, copy, new version, start over), copied, generation failure, link not active, usage limit. Light and dark, 375 px to 1280 px. The new/existing choice is a radio group (or toggle buttons), not links. Load all three fonts (the mockup only ships Instrument Serif). Informative text meets 4.5:1 contrast: use the mockup's darker `--ink-3`.
+- [x] 5. Best-effort in-memory per-class limit + Netlify per-IP rate limit + prepaid balance as the spending ceiling, as in the approved proposal (CA-05 limit message keeps the idea).
+- [x] 6. Update the PRD direction-check rows and `docs/HANDOFF.md`.
 
 ## Review stop
 
@@ -69,4 +69,10 @@ The mission is done when **all** of these items have evidence:
 
 ## Report
 
-Not started. Queue after mission 0002: 0004 → 0003 items 2–4 → 0001. No branch or product implementation is created by writing this mission.
+Implementation items 1–6 are complete locally. See the [evidence, criterion table, security review, screenshots, mutation table and owner Preview steps](../evidence/0004/README.md). `npm run check` passed with 166 unit tests and 16 invariant tests. The mock suite passed all 20 cases; no new real-model call or key use occurred. Four new invariant files detected five deliberate violations in a disposable copy.
+
+Browser flows and both themes were verified at 375, 768 and 1280 px. The PR includes 32 captures at 375 and 1280 px; the two intermediate captures remain local. No existing test, demo file, AI source, CI configuration, e2e isolation or eval threshold changed. Vite 8.3.5 is the only new direct dependency.
+
+The owner's decision on 2026-10-28 is that the Preview uses the existing TEST key; the owner configures it, and the agent never reads or copies it. Keep one mission and one PR, with at most 140,000 characters measured by the reviewer's filtering and counting logic. Raw command logs are not committed; the CI log provides persistent check evidence.
+
+Stop before Ready: the hosted Preview, account configuration, `invariant-approved` and the owner's decision remain pending. Automatic review has not been triggered. No merge, release, tag or deployment was performed. The queue remains mission 0004 → mission 0003 items 2–4 → mission 0001.
