@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ideia preenchida · promptPRO (mockup)</title>
+<link rel="stylesheet" href="fonts.css">
+<style>
+:root{--paper:#f7f5f0;--paper-2:#efece5;--paper-3:#e4e0d6;--ink:#111110;--ink-2:#4b4842;--ink-3:#807b72;--line:rgba(17,17,16,.12);--line-strong:rgba(17,17,16,.4);--accent:#e0471c;--accent-ink:#fff;--accent-soft:rgba(224,71,28,.1);--ok:#2f7a4b;--card:#fbfaf7;
+--display:"Instrument Serif","Times New Roman",serif;--sans:"Instrument Sans",ui-sans-serif,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--paper:#0f0e0c;--paper-2:#171613;--paper-3:#22201c;--ink:#f3f0e9;--ink-2:#bdb7ab;--ink-3:#7f796e;--line:rgba(243,240,233,.12);--line-strong:rgba(243,240,233,.36);--accent:#ff6a3d;--accent-ink:#1a0d06;--accent-soft:rgba(255,106,61,.14);--ok:#6fc28a;--card:#141311;}}
+:root[data-theme="dark"]{--paper:#0f0e0c;--paper-2:#171613;--paper-3:#22201c;--ink:#f3f0e9;--ink-2:#bdb7ab;--ink-3:#7f796e;--line:rgba(243,240,233,.12);--line-strong:rgba(243,240,233,.36);--accent:#ff6a3d;--accent-ink:#1a0d06;--accent-soft:rgba(255,106,61,.14);--ok:#6fc28a;--card:#141311;}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);-webkit-font-smoothing:antialiased;min-height:100vh}
+::selection{background:var(--accent);color:var(--accent-ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.banner{border-bottom:1px solid var(--line);background:var(--paper-2);color:var(--ink-3);text-align:center;font:500 10.5px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;padding:10px 16px}
+main{max-width:760px;margin:0 auto;padding:56px 16px 48px}
+.label{display:block;font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+h1{font-family:var(--display);font-weight:400;letter-spacing:-.01em;font-size:44px;line-height:.98;margin:16px 0 0}
+h1 span{display:block}h1 .s1{padding-left:.9em}h1 .s2{padding-left:1.8em}
+h1 em{color:var(--accent)}
+@media (min-width:640px){h1{font-size:64px}}
+h2{font-family:var(--display);font-weight:400;font-size:36px;line-height:1.05;margin:16px 0 0}
+.lead{margin:20px 0 0;max-width:520px;font-size:14.5px;line-height:1.6;color:var(--ink-2)}
+.segment{display:inline-flex;border:1px solid var(--line);border-radius:999px;padding:2px;gap:2px;background:var(--paper-2);margin-top:24px}
+.segment a{border-radius:999px;padding:6px 12px;font-family:var(--mono);font-size:11px;color:var(--ink-2);text-decoration:none;min-height:28px;display:inline-flex;align-items:center}
+.segment a.on{background:var(--ink);color:var(--paper)}
+.hint{margin:8px 0 0;font-size:12.5px;color:var(--ink-3)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.chips a{border:1px solid var(--line);background:var(--paper-2);border-radius:999px;padding:6px 12px;font-size:12.5px;color:var(--ink-2);text-decoration:none}
+.chips a:hover{border-color:var(--line-strong);color:var(--ink)}
+.composer{margin-top:24px;display:flex;flex-direction:column;border:1px solid var(--line-strong);border-radius:14px;background:var(--card)}
+.composer:focus-within{border-color:var(--accent)}
+.composer textarea{width:100%;min-height:96px;resize:none;border:0;outline:none;background:transparent;padding:12px 16px 0;font:15px/1.6 var(--sans);color:var(--ink)}
+.composer textarea::placeholder{color:var(--ink-3)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 8px 8px 16px}
+.send{display:flex;width:36px;height:36px;align-items:center;justify-content:center;border-radius:999px;background:var(--accent);color:var(--accent-ink)}
+.send.off{background:var(--paper-3);color:var(--ink-3)}
+.user{display:flex;justify-content:flex-end;margin-top:24px}
+.user div{max-width:80%;white-space:pre-wrap;border-radius:12px;background:var(--ink);color:var(--paper);padding:10px 16px;font-size:14px;line-height:1.6}
+.card{margin-top:24px;border:1px solid var(--line-strong);border-radius:12px;background:var(--card)}
+.card-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;border-bottom:1px solid var(--line);padding:8px 16px}
+.card textarea{width:100%;min-height:440px;resize:vertical;border:0;outline:none;background:transparent;padding:16px;font:13px/1.7 var(--mono);color:var(--ink)}
+.cta{display:inline-flex;align-items:center;border-radius:999px;background:var(--accent);color:var(--accent-ink);padding:7px 14px;font-family:var(--mono);font-size:11px;text-decoration:none}
+.ghost{font-family:var(--mono);font-size:11px;color:var(--ink-3);text-decoration:none}
+.ghost:hover{color:var(--accent)}
+.actions{display:flex;align-items:center;gap:16px}
+.note{margin-top:16px;border-radius:8px;padding:8px 12px;font-size:13px;line-height:1.5}
+.note.err{background:var(--accent-soft)}
+.note.ok{background:color-mix(in oklab,var(--ok) 14%,transparent);color:var(--ok)}
+.foot{margin-top:16px;font-size:12.5px;color:var(--ink-3)}
+.foot a{color:var(--ink-2)}
+.states{margin-top:64px;padding-top:12px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink-3)}
+.states a{color:var(--ink-2)}
+</style>
+</head>
+<body data-mockup>
+<div class="banner">Mockup: não é o app real · mostra o fluxo</div>
+<main>
+<span class="label">promptPRO · do rascunho ao prompt</span>
+<h1><span>Antes de pedir,</span><span class="s1"><em>organize</em> a sua</span><span class="s2">ideia.</span></h1>
+<p class="lead">Descreva o site, app ou funcionalidade do seu jeito. O promptPRO devolve um prompt com objetivo, requisitos e critérios, e aponta o que ainda falta decidir. Pronto para colar no Claude Code, no Codex ou em outro agente.</p>
+<div class="segment" role="group" aria-label="Novo ou existente (opcional)">
+<a href="index.html" class="on" aria-pressed="true">Novo projeto</a>
+<a href="existente.html" class="" aria-pressed="false">Projeto existente</a>
+</div>
+<div class="chips">
+<a href="ideia.html">Site para uma pista de kart em Campinas</a>
+<a href="ideia.html">App de hábitos com visual caprichado</a>
+<a href="ideia.html">Controle de finanças para freelancers</a>
+<a href="ideia.html">Landing page de um estúdio de pilates</a>
+</div>
+<div class="composer">
+<label class="label" for="ideia" style="padding:12px 16px 0">sua ideia</label>
+<textarea id="ideia" placeholder="">Quero um site para a minha pista de kart em Campinas. Precisa mostrar os horários, os preços das baterias e ter um jeito de a pessoa agendar pelo WhatsApp.</textarea>
+<div class="bar"><span class="label">155 / 2.000 caracteres</span>
+<a class="send" href="resultado.html" aria-label="Gerar prompt"><svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true"><path d="M8 13V3M4 7l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></a></div>
+</div>
+<p class="states"><span class="label">outros estados deste mockup</span>
+<a href="index.html">início</a> ·
+<a href="erro.html">falha na geração</a> ·
+<a href="acesso-invalido.html">link sem código ou vencido</a> ·
+<a href="limite.html">limite de uso da turma</a></p>
+</main>
+</body>
+</html>
