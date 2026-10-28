@@ -101,32 +101,16 @@ Variables: `LLM_PROVIDER`, `LLM_MODEL`, `EVAL_JUDGE_PROVIDER`, `EVAL_JUDGE_MODEL
 
 Existing cases are not edited or deleted to "pass": that is weakening a test (`AGENTS.md`, section 1.3).
 
-## generate-prompt (owner decisions, 2026-10-28)
+## generate-prompt
 
-20 simulated cases: 10 prototype +10 new, marked origin/tags; no real students or untouched holdout. CA-02 rules1.0/judge>=3.5 (provisional until first real class). Cases/bans frozen before runs; only three diversion rubrics later corrected with owner approval. Both calibrations discarded; initial v2 plus one final owner sentence. Post-result disclosures, scores and literal diffs: docs/missions/0002-eval-report.md.
-
-No expected.category: accuracy **N/A**, neutral0.0 delegated by owner; runner displays100% on completed calls, including rule failures. Product validation: six nonempty sections exactly once/in order, invalid=>needsHuman; independent12,000 UTF-16-unit cap (not token conversion), generation maxTokens1500. Judge/rubric evaluates expected.ambiguities by meaning, intention/scope/Portuguese/<=6 questions, not keywords.
+20 simulated cases, no real-class/holdout/human review. Owner-approved rules1/judge>=3.5 (provisional); accuracy N/A/neutral0. Product: six ordered sections,12000UTF-16-unit safety cap,1500tokens. Judge evaluates ambiguity/scope/Portuguese/<=6questions. Full protocol, post-result decisions, patterns/tests/limits and historical patches: docs/missions/0002-eval-report.md.
 
 ### Finite technology catalog
 
 `React`, `Next.js`, `NextJS`, `Vue`, `Angular`, `Svelte`, `Vite`, `Tailwind`, `Bootstrap`, `TypeScript`, `JavaScript`, `Python`, `PHP`, `Java`, `SwiftUI`, `Swift`, `SwiftData`, `Core Data`, `Kotlin`, `Flutter`, `React Native`, `Firebase`, `Supabase`, `PostgreSQL`, `Postgres`, `MySQL`, `SQLite`, `MongoDB`, `Redis`, `Prisma`, `Docker`, `Kubernetes`, `Vercel`, `Netlify`, `AWS`, `Azure`, `Google Cloud`, `Stripe`, `PayPal`, `Mercado Pago`, `WhatsApp`, `Telegram`, `Twilio`, `SendGrid`, `Resend`, `OpenAI`, `Gemini`, `DeepSeek`, `Claude`, `Codex`, `API`, `GraphQL`, `URL`, `HTTP`, `HTTPS`, `HTML`, `CSS`, `JSON`, `CSV`, `PDF`, `XML`, `WebSocket`, `OAuth`, `JWT`, `Android`, `iPhone`, `PWA`, `localStorage`, `IndexedDB`, `WebView`, `WordPress`, `WooCommerce`, `Shopify`, `Excel`, `Google Sheets`, `Notion`.
 
-mustNotContain bans catalog terms absent from the idea, case-insensitively, including URL in questions. Aliases: zap permits WhatsApp; iPhone permits iOS metadata. Longer allowed terms also permit catalog substrings (SwiftUI/Swift). Finite/raw-substring rules miss unknown/obfuscated technologies and may collide with ordinary words. REST/iOS excluded before generation because of restantes/horários collisions. allowed metadata is descriptive, not enforced. Never change catalog/cases after results to improve scores.
+Absent-term substring bans, zap→WhatsApp/iPhone→iOS aliases; REST/iOS excluded before calls (restantes/horários). allowed metadata descriptive. Owner-approved post-CI variants retain six technologies: API/Vite/Excel/Redis/Angular use space/punctuation/context, plural APIs; Prisma requires ORM/client/schema context. Unlisted boundaries/context can escape or collide; no universal matcher. Original cardapio/API allowance retained. Runner/library/input/rubric/limits unchanged.
 
 ### Configuration
 
-TEST key only ignored .env; unchanged facade/adapter. Product requires real client openai-compatible:deepseek-flash and LLM_EXTRA_BODY exactly temperature0.2/thinking disabled, without overrides; create the client after setting it. No global mutation in product code.
-
-```sh
-npm run eval:mock
-LLM_PROVIDER=openai-compatible LLM_BASE_URL=https://api.deepseek.com LLM_MODEL=deepseek-flash \
-LLM_EXTRA_BODY='{"temperature":0.2,"thinking":{"type":"disabled"}}' \
-EVAL_JUDGE_MODEL= EVAL_JUDGE_PROVIDER=openai-compatible \
-node --env-file=.env evals/run.ts --suite generate-prompt --judge --out evals/results/generate-prompt/example
-```
-
-New target alone adapts the classifier-shaped mock into a visibly synthetic six-section fixture, still calls the budgeted mock client. Direct product rejects classifier JSON. No existing mock/test changed; four initial flow failures resolved in new target. Mock pass proves plumbing only.
-
-40 calls/run (20 generator+20 judge), maxCalls60 unchanged, no retries; no paid repeat without authorization. Historical Pro-judge runs differ from final Flash/Flash. CI does not map EVAL_JUDGE_MODEL/PROVIDER; owner-set EVAL_MODEL=deepseek-flash, EVAL_JUDGE=1, EVAL_EXTRA_BODY as above verified read-only. Local blank judge model emulates CI absent override. Same protocol, stochastic scores; no agent workflow/variable change.
-
-Official docs checked2026-10-28 (Context7 quota exhausted): [thinking](https://api-docs.deepseek.com/guides/thinking_mode/), [pricing](https://api-docs.deepseek.com/quick_start/pricing/). USD/million hit/miss/output: Flash peak .006/.30/1.20, off-peak .003/.15/.60; Pro peak .044/1.32/3.96, off-peak .022/.66/1.98. Report uses actual usage, not billing; runner's miss-only/mixed-model estimate differs.
+TEST key ignored .env; existing facade requires openai-compatible:deepseek-flash and exact LLM_EXTRA_BODY={"temperature":0.2,"thinking":{"type":"disabled"}}. Owner CI variables set Flash/body/EVAL_JUDGE=1, verified read-only; no EVAL_JUDGE_MODEL mapping, both roles Flash.40calls/suite, cap60, no paid repeat without authorization. Mock is synthetic plumbing only; existing tests unchanged. [Official thinking](https://api-docs.deepseek.com/guides/thinking_mode/)/[prices](https://api-docs.deepseek.com/quick_start/pricing/) checked2026-10-28 (Context7 quota exhausted); costs estimated, not billing.
