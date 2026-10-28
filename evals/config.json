@@ -44,6 +44,17 @@
         "judgeAverage": 4.0
       },
       "maxDropFromBaseline": 0.05
+    },
+    {
+      "name": "generate-prompt",
+      "golden": "evals/golden/generate-prompt.jsonl",
+      "target": "generatePrompt",
+      "thresholds": {
+        "accuracy": 0.0,
+        "rulePassRate": 1.0,
+        "judgeAverage": 3.5
+      },
+      "maxDropFromBaseline": 0.05
     }
   ]
 }

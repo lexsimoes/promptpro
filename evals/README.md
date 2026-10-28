@@ -100,3 +100,17 @@ Variables: `LLM_PROVIDER`, `LLM_MODEL`, `EVAL_JUDGE_PROVIDER`, `EVAL_JUDGE_MODEL
 4. Run `npm run eval:mock` to check the format, and then with the real provider.
 
 Existing cases are not edited or deleted to "pass": that is weakening a test (`AGENTS.md`, section 1.3).
+
+## generate-prompt
+
+20 simulated cases, no real-class/holdout/human review. Owner-approved rules1/judge>=3.5 (provisional); accuracy N/A/neutral0. Product: six ordered sections,12000UTF-16-unit safety cap,1500tokens. Judge evaluates ambiguity/scope/Portuguese/<=6questions. Full protocol, post-result decisions, patterns/tests/limits and historical patches: docs/missions/0002-eval-report.md.
+
+### Finite technology catalog
+
+`React`, `Next.js`, `NextJS`, `Vue`, `Angular`, `Svelte`, `Vite`, `Tailwind`, `Bootstrap`, `TypeScript`, `JavaScript`, `Python`, `PHP`, `Java`, `SwiftUI`, `Swift`, `SwiftData`, `Core Data`, `Kotlin`, `Flutter`, `React Native`, `Firebase`, `Supabase`, `PostgreSQL`, `Postgres`, `MySQL`, `SQLite`, `MongoDB`, `Redis`, `Prisma`, `Docker`, `Kubernetes`, `Vercel`, `Netlify`, `AWS`, `Azure`, `Google Cloud`, `Stripe`, `PayPal`, `Mercado Pago`, `WhatsApp`, `Telegram`, `Twilio`, `SendGrid`, `Resend`, `OpenAI`, `Gemini`, `DeepSeek`, `Claude`, `Codex`, `API`, `GraphQL`, `URL`, `HTTP`, `HTTPS`, `HTML`, `CSS`, `JSON`, `CSV`, `PDF`, `XML`, `WebSocket`, `OAuth`, `JWT`, `Android`, `iPhone`, `PWA`, `localStorage`, `IndexedDB`, `WebView`, `WordPress`, `WooCommerce`, `Shopify`, `Excel`, `Google Sheets`, `Notion`.
+
+Absent-term substring bans, zap→WhatsApp/iPhone→iOS aliases; REST/iOS excluded before calls (restantes/horários). allowed metadata descriptive. Owner-approved post-CI variants retain six technologies: API/Vite/Excel/Redis/Angular use space/punctuation/context, plural APIs; Prisma requires ORM/client/schema context. Unlisted boundaries/context can escape or collide; no universal matcher. Original cardapio/API allowance retained. Runner/library/input/rubric/limits unchanged.
+
+### Configuration
+
+TEST key ignored .env; existing facade requires openai-compatible:deepseek-flash and exact LLM_EXTRA_BODY={"temperature":0.2,"thinking":{"type":"disabled"}}. Owner CI variables set Flash/body/EVAL_JUDGE=1, verified read-only; no EVAL_JUDGE_MODEL mapping, both roles Flash.40calls/suite, cap60, no paid repeat without authorization. Mock is synthetic plumbing only; existing tests unchanged. [Official thinking](https://api-docs.deepseek.com/guides/thinking_mode/)/[prices](https://api-docs.deepseek.com/quick_start/pricing/) checked2026-10-28 (Context7 quota exhausted); costs estimated, not billing.
