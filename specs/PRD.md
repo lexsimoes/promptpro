@@ -49,6 +49,8 @@ Rules that can **never** break. Each one has a test in `tests/invariants/` that 
 - The function's exported native rule is 10 requests/3,600 seconds/domain+IP.
 - Catches a violation: allow eleven calls, accept a missing trusted IP, or weaken the native window → the invariant suite fails.
 
+Hosted validation blocker (mission 0005): Netlify rejected 3,600 seconds; its accepted range is 10–180. The public quota is not complete; do not launch before an owner-approved shared counter is verified.
+
 The platform rule counts requests, including invalid ones; the local backstop counts validated generation attempts. Netlify enforcement can lag by up to ten seconds. The memory backstop is immediate only within one instance and resets on cold starts; it is not a distributed hard quota. Shared networks share a quota; address rotation can evade per-IP limits. No IP limit guarantees a global spending ceiling. Keep the separately funded provider account with auto-recharge off before launch. [Netlify enforcement timing](https://docs.netlify.com/manage/security/secure-access-to-sites/rate-limiting/#enforcement-timing).
 
 ### INV-004 cases
@@ -93,10 +95,10 @@ Updated on every mission, by the agent, in the mission's PR. Every Monday, the `
 | CA-03 | `docs/evidence/0004/README.md` (local; hosted Preview pending) | ✅ |
 | CA-04 | `docs/evidence/0004/README.md` (local; hosted Preview pending) | ✅ |
 | CA-05 | `docs/evidence/0004/README.md` (local; hosted Preview pending) | ✅ |
-| CA-06 | `tests/invariants/access.invariant.test.ts`; `docs/evidence/0005/README.md` (public access verified locally; hosted enforcement pending) | 🟡 |
+| CA-06 | `tests/invariants/access.invariant.test.ts`; `docs/evidence/0005/README.md` (public flow verified; native one-hour quota rejected) | ❌ |
 | CA-07 | `tests/unit/promptpro-server.test.ts` (local; hosted Preview pending) | ✅ |
 | CA-08 | `docs/evidence/0004/README.md` (local; hosted Preview pending) | ✅ |
-| INV-003 | `tests/invariants/access.invariant.test.ts`; `docs/evidence/0005/README.md` (local quota/config verified; native enforcement pending) | 🟡 |
+| INV-003 | `tests/invariants/access.invariant.test.ts`; `docs/evidence/0005/README.md` (local backstop verified; native one-hour quota rejected) | ❌ |
 | INV-004 | `tests/invariants/server-secrets.invariant.test.ts` (local; hosted Preview pending) | ✅ |
 | INV-005 | `tests/invariants/student-content.invariant.test.ts` (local; hosted Preview pending) | ✅ |
 | INV-006 | `tests/invariants/model-limits.invariant.test.ts` (local; hosted Preview pending) | ✅ |

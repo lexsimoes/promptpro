@@ -1,5 +1,7 @@
 # Mission 0005 evidence
 
+**BLOCKED:** Netlify post-processing rejected windowSize=3600: "invalid window size, must be between 10 and 180. Ignoring." A successful deploy did not mean the edge quota was applied. Preview #8 is being disabled with a branch-only APP_ENV=disabled override; no production publication. A shared persistent counter needs owner authorization before implementation.
+
 Owner decision, 2026-10-28: public access, no class code, 10 generation attempts per IP per hour; replace INV-003 in a separate PR. Based on PR #7's implementation. Production publication is authorized; no merge, DNS change or production publication has been performed by the agent.
 
 ## Commands and counts
@@ -26,7 +28,7 @@ All three mutated runs exited 1. Restoring the code exited 0 (3/3 access invaria
 - Ten validated attempts reserve before await; provider failure and concurrent requests consume attempts. Retry-After is supplied on local 429. New networks get separate quotas.
 - The backstop stores only process-salted HMAC identifiers and counters in memory, at most 10,000 active buckets; no raw IP, idea or prompt is written or logged. Full capacity fails closed; expired buckets can be reclaimed.
 - Native function rule is 10 requests/3,600 seconds/domain+IP; it counts malformed requests too. No database/dependency, client key, public reset endpoint or spoofable identity fallback was added. Origin/host/size/output/CSP policies are preserved.
-- No confirmed security defect remains in the reviewed diff. Important limitation: Netlify enforcement can lag up to ten seconds and the memory backstop is instance-local/reset on cold starts, so these controls do not guarantee a strict distributed ten-call ceiling. Shared networks share a quota; rotating addresses can bypass it. A separate prepaid account with automatic recharge off remains the cost boundary.
+- Confirmed blocker from hosted validation: the one-hour native window is rejected and ignored. The memory backstop is instance-local/reset on cold starts, so it cannot supply the missing distributed ten-call ceiling. Shared networks share a quota; rotating addresses can bypass it. A separate prepaid account with automatic recharge off remains the cost boundary.
 
 ## Screenshots
 
@@ -38,7 +40,7 @@ All three mutated runs exited 1. Restoring the code exited 0 (3/3 access invaria
 
 ## Hosted verification and production prerequisites
 
-The new Preview must use APP_ENV=preview and PREVIEW_HOST matching its PR number; existing TEST-key secret may remain in Deploy Previews, entered privately by the owner. CLASS_CODES_JSON is no longer used by this branch. Preview #8 deployed successfully after a branch-specific PREVIEW_HOST override; the PR #7 host was preserved. At https://deploy-preview-8--lexsimoes-promptpro.netlify.app/ two real TEST-provider generations succeeded without a code; edited copy matched the clipboard and regeneration replaced edits with six sections. Native rule enforcement remains unverified. Do not run a burst/load test against a real provider to prove the quota.
+The new Preview must use APP_ENV=preview and PREVIEW_HOST matching its PR number; existing TEST-key secret may remain in Deploy Previews, entered privately by the owner. CLASS_CODES_JSON is no longer used by this branch. Preview #8 deployed successfully after a branch-specific PREVIEW_HOST override; the PR #7 host was preserved. At https://deploy-preview-8--lexsimoes-promptpro.netlify.app/ two real TEST-provider generations succeeded without a code; edited copy matched the clipboard and regeneration replaced edits with six sections. The native rule was rejected in post-processing; hosted generation alone did not verify the quota. Do not run a burst/load test against a real provider to prove the quota.
 
 The owner merges reviewed changes; the agent never merges. Before public production: verify DeepSeek retention and prepaid cap/auto-recharge, provide the production LLM_API_KEY privately, configure APP_ENV=production and the provider variables in the Production context, connect getprompt.pro at the registrar, verify DNS/HTTPS and then publish the reviewed build. No credentials were read/copied and no production secrets were configured in this work. DNS lookup returned artemis.dns-parking.com / hermes.dns-parking.com; no DNS was changed.
 

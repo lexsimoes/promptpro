@@ -15,7 +15,9 @@
 - Secrets set (names only): `REVIEW_API_KEY`, `REVIEW_DEEP_API_KEY`, `EVAL_API_KEY`. Reviewer: DeepSeek, Claude on sensitive paths. Conversation language: `pt-BR`.
 - Way of working: Codex implements the missions; Claude Code writes the prompts for Codex, reviews its results, and writes the end-to-end tests (mission 0003).
 
-## Active: mission 0005, public access (owner decision 2026-10-28)
+## Active: mission 0005, public access — blocked
+
+Netlify rejected the one-hour native window (only 10–180 seconds), despite reporting deploy success. PR #8 stays draft; its branch-only APP_ENV override is disabled to prevent real calls. Do not re-enable it until a shared counter is implemented and verified with owner authorization. No production/DNS change.
 
 The owner tested the class-link Preview successfully, then authorized public access without a code, 10 attempts per IP per hour, replacement of INV-003 and its tests in a separate PR, and publication on getprompt.pro. Mission 0005 PR #8 includes the still-draft PR #7 as its base implementation and targets main for Netlify Preview; no merge or owner label was performed. See [mission 0005](missions/0005-public-ip-access.md) and [its evidence](evidence/0005/README.md). Hosted runtimes use public access, trusted context.ip/socket identity, a bounded immediate instance-local backstop and a native 10/3,600s/domain+IP rule. No CLASS_CODES_JSON is required. Legacy class helpers remain for unchanged isolated tests only. Shared networks share the quota; native enforcement can lag by ten seconds and local quotas reset on cold starts, so this is not a distributed hard spending limit.
 

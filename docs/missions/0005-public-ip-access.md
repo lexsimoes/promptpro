@@ -1,6 +1,6 @@
 # Mission 0005: Public access with IP limits
 
-**Status:** in progress — draft PR #8 — public Preview verified; owner invariant label/review pending
+**Status:** in progress — blocked — native one-hour window rejected; owner storage decision pending
 **Branch:** `mission/0005-public-ip-access` · **PR:** [#8](https://github.com/lexsimoes/promptpro/pull/8)
 **Approved by the owner:** 2026-10-28
 
@@ -22,4 +22,4 @@ Allowed: product access/server/UI wiring, a bounded in-memory IP backstop, nativ
 
 ## Report
 
-See [evidence and security review](../evidence/0005/README.md). Local check: 171 unit tests, 16 invariants; build passed. Three deliberate mutations failed and restored tests passed. The public mock browser flow generated ten versions; the eleventh was blocked with its idea retained. Edited copy matched the clipboard. No key was read. Two TEST-provider generations on Preview #8 succeeded without a code; edited copy and regeneration passed. CI quality, dependencies and demo e2e passed; invariant guard awaits the owner label, and review/evals are skipped while draft. Native hosted enforcement, production credentials/budget, provider retention verification, DNS and HTTPS are pending.
+See [evidence and security review](../evidence/0005/README.md). Local check: 171 unit tests, 16 invariants; build passed. Three deliberate mutations failed and restored tests passed. The public mock browser flow generated ten versions; the eleventh was blocked with its idea retained. Edited copy matched the clipboard. No key was read. Two TEST-provider generations on Preview #8 succeeded without a code; edited copy and regeneration passed. CI quality, dependencies and demo e2e passed; invariant guard awaits the owner label. Post-processing rejected the native one-hour window (accepted range 10–180 seconds). Preview #8 is disabled pending a shared-counter decision; never call this quota complete. Native hosted enforcement, production credentials/budget, provider retention verification, DNS and HTTPS are pending.
