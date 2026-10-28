@@ -21,7 +21,7 @@ Decisions already taken by the owner:
 
 The template's demo app stays in the repository during this mission and must keep working: build promptPRO next to it, without editing or deleting demo files. Mission 0001 removes the demo after missions 0002 and 0003. Mission 0003 writes the end-to-end tests from `specs/e2e/generate-prompt.md` (its item 1 comes before this mission's code).
 
-promptPRO's server must offer the same isolated end-to-end mode as the demo's (`providerFor` in `src/web/server.ts`, tested in `tests/unit/web.test.ts`): with `APP_ENV=e2e` it accepts only `LLM_PROVIDER=mock` and refuses any real provider. Keep the PR under the reviewer's 150,000-character diff limit: if it would go over, stop and propose a split.
+promptPRO's server gets its own file and its own new test under `tests/unit/`, with the same isolated end-to-end mode the demo has today (for reference only: `providerFor` in `src/web/server.ts`, tested in `tests/unit/web.test.ts`; do not edit them): with `APP_ENV=e2e` it accepts only `LLM_PROVIDER=mock` and refuses any real provider. It also provides everything listed in `specs/e2e/generate-prompt.md`, "What mission 0002 must provide for these tests" (e2e class codes, class-link format, deterministic mock with `Versão N`, provider failure on `E2E-FALHA-PROVEDOR`, accessible names). Keep the PR under the reviewer's 150,000-character diff limit: if it would go over, stop and propose a split.
 
 ## Authorization
 
