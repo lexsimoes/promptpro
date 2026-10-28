@@ -15,7 +15,7 @@ First slice of `specs/PRD.md`: CA-01 to CA-08 and the non-negotiables INV-003 to
 Decisions already taken by the owner:
 - Students only, one code per class in the link, with an expiry date and a usage limit. No accounts, no passwords, no database.
 - DeepSeek V4 Flash, chosen by the owner on 2026-10-28; the prototype validates it, with reasoning off or minimal. The official current ID is `deepseek-flash` (DeepSeek-V4.1-Flash-1017); the provider retired the original V4 Flash and routes its legacy alias to this backend.
-- Technology and hosting are not chosen yet: the agent proposes them in item 2.
+- Technology and hosting approved on 2026-10-28: vanilla TypeScript/CSS, Vite 8.3.5 as a development dependency, and Netlify Free. No Redis or storage; best-effort process-memory class counters, Netlify domain+IP rate limit (60/60 s), and USD 5 prepaid production DeepSeek balance with auto-recharge off, in an account separate from the reviewer. See the approved technical proposal.
 - Domain: the owner bought `getprompt.pro`; the app is published there. Publishing to production (and any DNS change) happens only with the owner's explicit approval, after this mission's PR is merged.
 - DeepSeek is both the generator provider and the PR reviewer; these roles have separate configuration and validation.
 
@@ -42,20 +42,20 @@ What the agent **may not** do (it stops and asks):
 ## Items
 
 - [x] 1. **Throwaway prototype** in `prototype/model-choice/`: DeepSeek V4 Flash, chosen by the owner on 2026-10-28; the prototype validates it. Run the same ten simulated ideas twice (20 generations, ceiling 25 HTTP attempts including discovery), with criteria recorded before generation: six sections in order in 100% of outputs; zero invented technologies; at most one distinct idea with a mild invented feature and zero non-mild additions; at least 80% of expected ambiguities found; no task diversion; Portuguese throughout. Record full outputs, literal invention excerpts, ambiguity coverage, tokens, cost, latency and differences between rounds. Do not change the system prompt or model if a criterion fails. These ideas become the first golden-set cases.
-- [ ] 2. **Technical proposal** (one page in the PR): framework and hosting; how class codes and their expiry are configured on the server; how the usage limit per class and per IP works without a database (hosting firewall or rate limiting first; any storage only with approval); max idea length (2,000 characters) and output cap; how logs avoid student text; how the app is published on `getprompt.pro` (DNS records the owner sets at the registrar, HTTPS, preview vs production, where secrets live), as steps the owner approves. Proposal written: [0002-technical-proposal.md](0002-technical-proposal.md), awaiting owner review; no stack, storage, hosting or dependency approval is implied.
+- [x] 2. **Technical proposal** (one page in the PR): framework and hosting; how class codes and their expiry are configured on the server; how the usage limit per class and per IP works without a database (hosting firewall or rate limiting first; any storage only with approval); max idea length (2,000 characters) and output cap; how logs avoid student text; how the app is published on `getprompt.pro` (DNS records the owner sets at the registrar, HTTPS, preview vs production, where secrets live), as steps the owner approves. Proposal written: [0002-technical-proposal.md](0002-technical-proposal.md), approved by the owner on 2026-10-28; decisions recorded in its Owner decisions section. No infrastructure has been provisioned.
 - [ ] 3. Golden set `evals/golden/generate-prompt.jsonl` and suite `generate-prompt` with the thresholds of CA-02 (rule pass rate = 1.0, judge average ≥ 4.0), adapting the eval target to text generation if needed. Rules check: all six sections present; no technology named that the idea did not name; each listed ambiguity of the case appears under To clarify. Add at least 10 NEW ideas not used in prototype adjustment. Automatic rules count at most 6 question marks (`?`, not list items) under A esclarecer and reject any technology absent from the idea, including questions. The judge evaluates whether questions expand scope. Calibrate question coverage versus scope here; CA-02 stays rule pass rate = 1.0 and judge average >= 4.0.
 - [ ] 4. Class-code check on the server and its invariant test `tests/invariants/access.invariant.test.ts` (INV-003, cases from the PRD).
 - [ ] 5. Generation endpoint with input and output caps, secrets kept on the server and no student text in logs, with `tests/invariants/model-limits.invariant.test.ts` (INV-006), `tests/invariants/server-secrets.invariant.test.ts` (INV-004) and `tests/invariants/student-content.invariant.test.ts` (INV-005).
 - [ ] 6. Prompt builder and its unit tests `tests/unit/generate-prompt.test.ts` (CA-01 sections, CA-07 new/existing choice).
 - [ ] 7. UI following `prototype/mockup/`: start screen (headline, optional new/existing choice, suggestions, idea box with counter), result (original idea, editable prompt, copy, new version, start over), copied, generation failure, link not active, usage limit. Light and dark, 375 px to 1280 px. The new/existing choice is a radio group (or toggle buttons), not links. Load all three fonts (the mockup only ships Instrument Serif). Informative text meets 4.5:1 contrast: use the mockup's darker `--ink-3`.
-- [ ] 8. Usage limit per class and per IP, as approved in item 2 (CA-05 limit message keeps the idea).
+- [ ] 8. Best-effort in-memory per-class limit + Netlify per-IP rate limit + prepaid balance as the spending ceiling, as in the approved proposal (CA-05 limit message keeps the idea).
 - [ ] 9. Update the PRD direction-check rows and `docs/HANDOFF.md`.
 
 ## Review stops
 
 Moments when the agent **stops and shows** what it did before moving on:
 - [x] After item 1: the two-round DeepSeek validation report, failures and consistency differences; the owner reviews before item 2. The owner approved closure despite the failures on 2026-10-28; v2 is the initial prompt, with no more prototype rounds.
-- [ ] After item 2: the technical proposal; the owner approves before any dependency is added.
+- [x] After item 2: the technical proposal; approved by the owner on 2026-10-28. Netlify Free, no storage, best-effort memory counters and prepaid balance approved; no dependency installed.
 - [ ] After item 3: the golden set and thresholds; the owner approves them (they become protected).
 - [ ] Before opening the PR: summary + what was not verified.
 
@@ -74,10 +74,13 @@ The mission is done when **all** of these items have evidence:
 
 ## Report
 
-Item 1 closed by the owner on 2026-10-28; the full mission remains in progress (item 1 of 9).
+Item 1 closed by the owner on 2026-10-28; item 2 approved by the owner on 2026-10-28; the full mission remains in progress (items 1 and 2 of 9 closed).
 
 - **Owner decision:** DeepSeek Flash approved despite v1 ambiguity coverage 29/40 (72.5%), and v2's unrequested URL mention plus scope-proposing questions increasing 25 to 33. V2 is the initial prompt. No more prototype rounds; calibration moves to item 3 without weakening CA-02.
 - **Evidence:** `prototype/model-choice/REPORT.md`, two prompt versions/diff, unchanged simulated cases, compact per-output review and metrics. V2 ambiguity coverage 38/40 (95%); both versions have sections 20/20, Portuguese 20/20, injection rejection 2/2. The compact review records one conservative mild v2 feature addition. Raw provider responses remain local, omitted to keep the prototype diff near 30,000 characters.
 - **What was NOT verified:** human semantic review, fresh holdout ideas, production/retention/billing, full project/e2e/eval checks. Assessment attribution: leitura pelo agente (Codex); ainda sem revisão humana.
-- **Pending decisions:** item 2 technical proposal approval; at least ten new holdout ideas and question/scope calibration in item 3. Owner sets `EVAL_MODEL=deepseek-flash`.
+- **Item 2 approval:** Netlify Free, Vite 8.3.5 dev-only; no Redis/storage; best-effort per-class memory counter, native domain+IP limit 60/60 s, separate production DeepSeek account with USD 5 and auto-recharge off; generic 402 preserves idea; class-duration validity, env redeploy and canonical production Host. Public-repository preview requires approval and TEST-only credentials. See [approved proposal](0002-technical-proposal.md).
+- **Item 3 stop (2026-10-28):** the existing runner has only hardcoded invalid-output, length and mustNotContain rules (`evals/run.ts`, runSuite); no suite-specific rule hook or per-case expectations reach the target. GoldenCase in `evals/lib.ts` only types category/mustNotContain/rubric/tags. Adding explicit suite-rule support requires the owner's authorization under the latest request. No item 3 code, golden set, tests or runner changes were made; zero new model calls. The runner supports a separate judge through `EVAL_JUDGE_MODEL`; the compatible adapter reads `LLM_API_KEY`.
+- **Verification:** documentation diff passes `git diff --check`; local `npm run check` stalled at `eslint .` and was terminated after 40 seconds, not green.
+- **Pending decisions:** runner/library extension authorization, then item 3 golden set and thresholds review after implementation. Owner sets `EVAL_MODEL=deepseek-flash`; hosting/retention actions remain in HANDOFF.
 - **External content:** deliberately simulated poem injection rejected 2/2 by each version. Provider outputs were treated as data.
