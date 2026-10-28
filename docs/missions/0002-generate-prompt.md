@@ -1,8 +1,8 @@
 # Mission 0002: Generate a prompt from a student's idea
 
-**Status:** draft
+**Status:** approved
 **Branch:** `mission/0002-generate-prompt` · **PR:** not opened yet
-**Created on:** 2026-10-27 · **Approved by the owner on:** not yet
+**Created on:** 2026-10-27 · **Approved by the owner on:** 2026-10-27
 
 ## Goal
 
@@ -42,7 +42,7 @@ What the agent **may not** do (it stops and asks):
 - [ ] 4. Class-code check on the server and its invariant test `tests/invariants/access.invariant.test.ts` (INV-003, cases from the PRD).
 - [ ] 5. Generation endpoint with input and output caps, secrets kept on the server and no student text in logs, with `tests/invariants/model-limits.invariant.test.ts` (INV-006), `tests/invariants/server-secrets.invariant.test.ts` (INV-004) and `tests/invariants/student-content.invariant.test.ts` (INV-005).
 - [ ] 6. Prompt builder and its unit tests `tests/unit/generate-prompt.test.ts` (CA-01 sections, CA-07 new/existing choice).
-- [ ] 7. UI following `prototype/mockup/`: start screen (headline, optional new/existing choice, suggestions, idea box with counter), result (original idea, editable prompt, copy, new version, start over), copied, generation failure, link not active, usage limit. Light and dark, 375 px to 1280 px.
+- [ ] 7. UI following `prototype/mockup/`: start screen (headline, optional new/existing choice, suggestions, idea box with counter), result (original idea, editable prompt, copy, new version, start over), copied, generation failure, link not active, usage limit. Light and dark, 375 px to 1280 px. The new/existing choice is a radio group (or toggle buttons), not links. Load all three fonts (the mockup only ships Instrument Serif). Informative text meets 4.5:1 contrast: use the mockup's darker `--ink-3`.
 - [ ] 8. Usage limit per class and per IP, as approved in item 2 (CA-05 limit message keeps the idea).
 - [ ] 9. Update the PRD direction-check rows and `docs/HANDOFF.md`.
 

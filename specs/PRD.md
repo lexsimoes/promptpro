@@ -28,7 +28,7 @@ Each criterion must be **verifiable**: someone (or a test) can say yes or no.
 | CA-05 | When generation fails (provider error or usage limit), the idea stays in the field and the student can try again | `e2e/generate-prompt.spec.ts` |
 | CA-06 | Opening the app without a valid class code (missing, unknown or expired) shows "this link is not active" and nothing can be generated | `tests/invariants/access.invariant.test.ts`; `e2e/access.spec.ts` |
 | CA-07 | The optional "New project / Existing project" choice is reflected in the prompt's Context; with no choice, the prompt does not assume either | `tests/unit/generate-prompt.test.ts` |
-| CA-08 | The UI follows the approved mockup (`prototype/mockup/`): Ideal Match tokens and fonts (Instrument Serif, Instrument Sans, JetBrains Mono), Portuguese copy, usable at 375 px width, light and dark | Manual: compare each screen with `prototype/mockup/` at 375 px and 1280 px |
+| CA-08 | The UI follows the approved mockup (`prototype/mockup/`): Ideal Match tokens and fonts (Instrument Serif, Instrument Sans, JetBrains Mono; the mockup ships only the serif), Portuguese copy, usable at 375 px width, light and dark; informative text has at least 4.5:1 contrast (WCAG AA), so `--ink-3` uses the mockup's darker values | Manual: compare each screen with `prototype/mockup/` at 375 px and 1280 px, and measure the contrast of labels, counter and hints |
 
 ## 4. Non-negotiables
 

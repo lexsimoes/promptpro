@@ -7,8 +7,8 @@
 
 ## Current state
 
-- Discovery done: `specs/PRD.md` (CA-01 to CA-08, INV-003 to INV-006) and missions 0001–0003 are written and waiting for the owner's approval in the discovery PR.
-- Approved clickable mockup in `prototype/mockup/` (throwaway: flow and look reference, Ideal Match tokens and fonts; no code is built on it).
+- Discovery done (PR #3): `specs/PRD.md` (CA-01 to CA-08, INV-003 to INV-006) and missions 0001–0003, approved by the owner on 2026-10-27. The deep review's findings on PR #3 (e2e isolation needs `test-approved`, `--ink-3` contrast, toggle semantics, fonts, e2e with no specs) are addressed in the missions and the mockup.
+- Approved clickable mockup in `prototype/mockup/` (throwaway: flow and look reference, Ideal Match tokens with a darker `--ink-3` for WCAG AA; only Instrument Serif ships with it; no code is built on it).
 - The template's demo app (coupon store, message classifier, INV-001/INV-002, their evals and e2e tests) is still in the repository; mission 0001 removes it.
 - Template: ai-dev-template v0.5.1 (PR #1), which fixed the red `quality` check that projects from v0.5.0 were born with.
 - Secrets set (names only): `REVIEW_API_KEY`, `REVIEW_DEEP_API_KEY`, `EVAL_API_KEY`. Reviewer: DeepSeek, Claude on sensitive paths. Conversation language: `pt-BR`.

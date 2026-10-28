@@ -1,8 +1,8 @@
 # Mission 0003: End-to-end tests of generating a prompt
 
-**Status:** draft
+**Status:** approved
 **Branch:** `mission/0003-e2e-generate-prompt` · **PR:** not opened yet
-**Created on:** 2026-10-27 · **Approved by the owner on:** not yet
+**Created on:** 2026-10-27 · **Approved by the owner on:** 2026-10-27
 
 ## Goal
 
@@ -16,10 +16,11 @@ Covers CA-01, CA-03, CA-04, CA-05 and CA-06 of `specs/PRD.md` in the running app
 
 What the agent **may** do without asking:
 - write `specs/e2e/generate-prompt.md` (item 1);
-- create `e2e/generate-prompt.spec.ts`, `e2e/access.spec.ts` and fixtures they need, with a mock model (no real model calls in e2e).
+- create `e2e/generate-prompt.spec.ts` and `e2e/access.spec.ts`, with a mock model (no real model calls in e2e).
 
 What the agent **may not** do (it stops and asks):
 - change application code to make a test pass (open an issue for the bug instead);
+- change `e2e/fixtures.ts` or `playwright.config.ts` (for example, to plug in the mock model): stop and ask; it needs the owner's `test-approved` (`AGENTS.md` 1.3);
 - skip, focus or mark `fixme` any test; weaken a test already merged (needs the owner's `test-approved`);
 - touch `tests/invariants/`.
 
@@ -44,7 +45,7 @@ The mission is done when **all** of these items have evidence:
 |---|---|
 | Every test title starts with its CA-xx | `e2e/generate-prompt.spec.ts`, `e2e/access.spec.ts` |
 | The tests pass in the `e2e` check | CI log |
-| No real model is called during e2e | fixture uses the mock provider |
+| No real model is called during e2e | the app runs with the mock provider in e2e (any fixture or config change carries the owner's `test-approved`) |
 | `npm run check` green | CI log |
 
 ## Report
