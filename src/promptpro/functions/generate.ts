@@ -1,4 +1,4 @@
 import { serve } from "../runtime.ts";
 export default serve;
-// Native limits belong in function config, not netlify.toml (Netlify documentation).
-export const config = { path: "/api/generate", rateLimit: { windowLimit: 60, windowSize: 60, aggregateBy: ["domain", "ip"] } };
+// Shared edge limiter; enforcement may lag by up to 10 seconds (Netlify documentation).
+export const config = { path: "/api/generate", rateLimit: { windowLimit: 10, windowSize: 3600, aggregateBy: ["domain", "ip"] } };

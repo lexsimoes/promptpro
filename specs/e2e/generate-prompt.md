@@ -1,5 +1,9 @@
 # promptPRO: generating a prompt (end-to-end plan)
 
+## Owner scope change — 2026-10-28
+
+Mission 0005 supersedes the class-access scenarios below: public `/`, no code, 10 generation attempts per IP per hour. This document preserves the original plan as history; no existing e2e test or isolation file was edited. Before mission 0003 implementation, its author must replace scenarios 1.1/1.2 and 4.2 with public entry and exhaustion after ten attempts, check that the eleventh preserves the idea, and isolate quotas between tests through fresh mock server processes (never a public reset endpoint). A trusted test server supplies loopback identity; do not trust browser-provided forwarding headers. `turma-e2e-limite` no longer controls the running public UI. Other generation/edit/copy/regeneration requirements still apply. The original class helpers remain solely for existing isolated unit fixtures.
+
 ## Application Overview
 
 End-to-end plan for promptPRO's main flow, written before mission 0002's code (mission 0003, item 1) from `specs/PRD.md` and the approved mockup `prototype/mockup/`. The tests are written after mission 0002 is merged, by an agent other than the one that wrote the code (mission 0003, item 2).

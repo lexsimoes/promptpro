@@ -6,14 +6,14 @@
 
 ## 1. Goal
 
-Help students of the owner's vibe-coding course turn an idea written in their own words into a structured prompt (objective, context, requirements, constraints, completion criteria, open questions) ready to paste into Claude Code, Codex or another coding agent, without inventing features or technologies. Access is for course students only, by a class link, with no accounts and no database.
+Help students of the owner's vibe-coding course and other beginners turn an idea written in their own words into a structured prompt (objective, context, requirements, constraints, completion criteria, open questions) ready to paste into Claude Code, Codex or another coding agent, without inventing features or technologies. Access is public, without a class code, account or database. Owner decision, 2026-10-28: configure 10 generation attempts per IP per hour, including retries and new versions.
 
 ## 2. Users
 
 | Who | What they need |
 |---|---|
 | Course student (vibe-coding beginner) | A prompt that keeps what they meant, organized so an agent can act on it, and that shows what they still need to decide |
-| Course owner (@lexsimoes) | Give each class access with one link, cap the cost, and turn off a leaked link without touching the app |
+| Course owner (@lexsimoes) | Make access simple, mitigate excessive use per IP and keep a separate prepaid spending boundary |
 
 ## 3. Acceptance criteria
 
@@ -26,7 +26,7 @@ Each criterion must be **verifiable**: someone (or a test) can say yes or no.
 | CA-03 | When the student edits the generated prompt, the copy button copies the edited text | `e2e/generate-prompt.spec.ts` |
 | CA-04 | "Generate a new version" produces another prompt from the same original idea, which stays visible | `e2e/generate-prompt.spec.ts` |
 | CA-05 | When generation fails (provider error or usage limit), the idea stays in the field and the student can try again | `e2e/generate-prompt.spec.ts` |
-| CA-06 | Opening the app without a valid class code (missing, unknown or expired) shows "this link is not active" and nothing can be generated | `tests/invariants/access.invariant.test.ts`; `e2e/access.spec.ts` |
+| CA-06 | Opening `/` without a code shows the idea form. After ten generation attempts from the same IP in an hour, the next attempt is refused (429), keeps the idea and does not call the model again | `tests/invariants/access.invariant.test.ts`; `e2e/access.spec.ts` |
 | CA-07 | The optional "New project / Existing project" choice is reflected in the prompt's Context; with no choice, the prompt does not assume either | `tests/unit/generate-prompt.test.ts` |
 | CA-08 | The UI follows the approved mockup (`prototype/mockup/`): Ideal Match tokens and fonts (Instrument Serif, Instrument Sans, JetBrains Mono; the mockup ships only the serif), Portuguese copy, usable at 375 px width, light and dark; informative text has at least 4.5:1 contrast (WCAG AA), so `--ink-3` uses the mockup's darker values | Manual: compare each screen with `prototype/mockup/` at 375 px and 1280 px, and measure the contrast of labels, counter and hints |
 
@@ -36,17 +36,20 @@ Rules that can **never** break. Each one has a test in `tests/invariants/` that 
 
 | ID | Rule | Test |
 |---|---|---|
-| INV-003 | The model is never called unless the request carries a valid, unexpired class code, checked on the server | `tests/invariants/access.invariant.test.ts` |
+| INV-003 | Public generation requires a trusted server-supplied client IP. Reserve an instance-local quota before each model call (10 attempts per IP per hour), refuse exhausted or unavailable quotas before the model, and configure the Netlify shared edge rule to 10 requests/3,600 seconds/domain+IP | `tests/invariants/access.invariant.test.ts` |
 | INV-004 | The model API key and the class codes stay on the server: never in client code, a response body or a forwarded error | `tests/invariants/server-secrets.invariant.test.ts` |
 | INV-005 | The student's text (idea and edited prompt) is never persisted nor written to the application's logs | `tests/invariants/student-content.invariant.test.ts` |
 | INV-006 | Every model call has a capped input and a capped output; an idea over the limit is rejected before any call | `tests/invariants/model-limits.invariant.test.ts` |
 
-### INV-003 cases
-- No code in the request → refused (401), model mock records 0 calls.
-- Unknown code `turma-x` → refused (403), 0 calls.
-- Code valid until 2026-12-31T23:59:59-03:00: at 23:59:58 → allowed, 1 call; at 2027-01-01T00:00:00-03:00 → refused, 0 calls.
-- Code with a different letter case or surrounding spaces → treated as unknown, 0 calls.
-- Catches a violation: move the code check after the model call (or remove it) → the "0 calls" assertions fail.
+### INV-003 cases (owner replacement approved on 2026-10-28)
+- No class code, trusted IP and available quota → allowed, 1 model call.
+- Missing or invalid trusted IP, even with forwarded-IP headers supplied by the caller → refused (503), 0 calls.
+- Ten attempts from one IP → ten calls; the eleventh → refused (429), no additional call. A different IP has its own quota.
+- Just before the one-hour window expires → refused; at expiry → allowed again. Failed and concurrent attempts consume reservations too.
+- The function's exported native rule is 10 requests/3,600 seconds/domain+IP.
+- Catches a violation: allow eleven calls, accept a missing trusted IP, or weaken the native window → the invariant suite fails.
+
+The platform rule counts requests, including invalid ones; the local backstop counts validated generation attempts. Netlify enforcement can lag by up to ten seconds. The memory backstop is immediate only within one instance and resets on cold starts; it is not a distributed hard quota. Shared networks share a quota; address rotation can evade per-IP limits. No IP limit guarantees a global spending ceiling. Keep the separately funded provider account with auto-recharge off before launch. [Netlify enforcement timing](https://docs.netlify.com/manage/security/secure-access-to-sites/rate-limiting/#enforcement-timing).
 
 ### INV-004 cases
 - Built client assets (everything served to the browser) → contain neither the model key value nor any class code from the test environment.
@@ -77,7 +80,6 @@ Outside these tests: how long the AI provider keeps the requests (its data-reten
 - Choosing the technology for the student automatically.
 - An English version.
 - Choosing the platform (site / web app / iOS app) in the first version.
-- Opening the app to the general public.
 - Treating evals as a guarantee: they measure the model on known cases; a generative model can still err.
 
 ## 6. Direction check
@@ -91,10 +93,10 @@ Updated on every mission, by the agent, in the mission's PR. Every Monday, the `
 | CA-03 | `docs/evidence/0004/README.md` (local; hosted Preview pending) | ✅ |
 | CA-04 | `docs/evidence/0004/README.md` (local; hosted Preview pending) | ✅ |
 | CA-05 | `docs/evidence/0004/README.md` (local; hosted Preview pending) | ✅ |
-| CA-06 | `tests/invariants/access.invariant.test.ts` (local; hosted Preview pending) | ✅ |
+| CA-06 | `tests/invariants/access.invariant.test.ts`; `docs/evidence/0005/README.md` (public access verified locally; hosted enforcement pending) | 🟡 |
 | CA-07 | `tests/unit/promptpro-server.test.ts` (local; hosted Preview pending) | ✅ |
 | CA-08 | `docs/evidence/0004/README.md` (local; hosted Preview pending) | ✅ |
-| INV-003 | `tests/invariants/access.invariant.test.ts` (local; hosted Preview pending) | ✅ |
+| INV-003 | `tests/invariants/access.invariant.test.ts`; `docs/evidence/0005/README.md` (local quota/config verified; native enforcement pending) | 🟡 |
 | INV-004 | `tests/invariants/server-secrets.invariant.test.ts` (local; hosted Preview pending) | ✅ |
 | INV-005 | `tests/invariants/student-content.invariant.test.ts` (local; hosted Preview pending) | ✅ |
 | INV-006 | `tests/invariants/model-limits.invariant.test.ts` (local; hosted Preview pending) | ✅ |

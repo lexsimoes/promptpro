@@ -4,9 +4,7 @@
 <body>
 <header><a href="/" class="brand" aria-label="promptPRO, início">prompt<span>PRO</span></a><button id="theme" class="theme" type="button" aria-label="Mudar para tema escuro">Tema escuro</button></header>
 <main>
-<p id="access-loading" role="status" class="lead">Conferindo o link da sua turma…</p>
-<section id="inactive" hidden aria-labelledby="inactive-title"><span class="label">promptPRO · acesso da turma</span><h1 id="inactive-title">Este link<br>não está <em>ativo.</em></h1><p class="lead">Peça o link atualizado ao responsável pelo curso para começar.</p><p class="foot">O acesso é exclusivo para alunos da turma.</p><button id="access-retry" class="button secondary" type="button" hidden>Tentar conferir novamente</button></section>
-<section id="start" hidden aria-labelledby="intro-title">
+<section id="start" aria-labelledby="intro-title">
 <span class="label">promptPRO · do rascunho ao prompt</span>
 <h1 id="intro-title"><span>Antes de pedir,</span><span class="step-one"><em>organize</em> a sua</span><span class="step-two">ideia.</span></h1>
 <p class="lead">Descreva o site, app ou funcionalidade do seu jeito. O promptPRO devolve um prompt com objetivo, requisitos e critérios, e aponta o que ainda falta decidir. Pronto para colar no Claude Code, no Codex ou em outro agente.</p>
@@ -15,7 +13,7 @@
 <p class="hint">Se não escolher, o prompt deixa essa decisão em aberto.</p>
 <div class="chips" aria-label="Sugestões para começar"><button type="button">Site para uma pista de kart em Campinas</button><button type="button">App de hábitos com visual caprichado</button><button type="button">Controle de finanças para freelancers</button><button type="button">Landing page de um estúdio de pilates</button></div>
 <div class="composer"><label for="idea" class="label">Sua ideia</label><textarea autocomplete="off" id="idea" maxlength="2000" rows="4" placeholder="Quero criar…" aria-describedby="idea-count"></textarea><div class="bar"><span id="idea-count" class="counter">0 / 2.000 caracteres</span><button id="generate" class="send" type="submit" aria-label="Gerar prompt" disabled><svg viewBox="0 0 16 16" width="18" height="18" aria-hidden="true"><path d="M8 13V3M4 7l4-4 4 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
-</form><p class="foot">O promptPRO não salva seu texto. Ele é enviado à IA para gerar a resposta. Revise o prompt antes de usar.</p>
+</form><p class="hint">Até 10 gerações por hora por rede, incluindo novas versões e tentativas com falha.</p><p class="foot">O promptPRO não salva seu texto. Ele é enviado à IA para gerar a resposta. Revise o prompt antes de usar.</p>
 </section>
 <section id="result" hidden aria-labelledby="result-title"><span class="label">etapa 2 · seu prompt</span><h2 id="result-title" tabindex="-1">Revise, edite e copie.</h2><p class="lead">O botão copia exatamente o que estiver no quadro, com as suas edições.</p><div class="user"><p id="original-idea"></p></div>
 <div class="prompt-card"><div class="card-head"><label for="prompt" class="label">Prompt (editável)</label><div class="actions"><button type="button" id="regenerate" class="button secondary">Gerar nova versão</button><button type="button" id="copy" class="button primary">Copiar prompt</button></div></div><textarea autocomplete="off" id="prompt" rows="20" spellcheck="false"></textarea></div>

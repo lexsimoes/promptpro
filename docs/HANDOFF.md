@@ -15,7 +15,13 @@
 - Secrets set (names only): `REVIEW_API_KEY`, `REVIEW_DEEP_API_KEY`, `EVAL_API_KEY`. Reviewer: DeepSeek, Claude on sensitive paths. Conversation language: `pt-BR`.
 - Way of working: Codex implements the missions; Claude Code writes the prompts for Codex, reviews its results, and writes the end-to-end tests (mission 0003).
 
-## Active: mission 0004, final review stop
+## Active: mission 0005, public access (owner decision 2026-10-28)
+
+The owner tested the class-link Preview successfully, then authorized public access without a code, 10 attempts per IP per hour, replacement of INV-003 and its tests in a separate PR, and publication on getprompt.pro. Mission 0005 is stacked on the still-draft PR #7; no merge or owner label was performed. See [mission 0005](missions/0005-public-ip-access.md) and [its evidence](evidence/0005/README.md). Hosted runtimes use public access, trusted context.ip/socket identity, a bounded immediate instance-local backstop and a native 10/3,600s/domain+IP rule. No CLASS_CODES_JSON is required. Legacy class helpers remain for unchanged isolated tests only. Shared networks share the quota; native enforcement can lag by ten seconds and local quotas reset on cold starts, so this is not a distributed hard spending limit.
+
+Production publication is authorized, but the owner must merge the dependent PRs and supply production credentials privately before it can proceed. DNS/HTTPS, separate prepaid budget, provider retention and native hosted enforcement remain unverified. The agent never merges or applies invariant-approved. The original mission 0004 report below is historical; class-only requirements are superseded by the PRD's owner-approved public-access decision.
+
+## Mission 0004, final review stop (historical class-access implementation)
 
 PR #6 merged at e643a86. Items 1–6 are implemented on `mission/0004-generate-endpoint-and-ui`; the mission's single [PR #7](https://github.com/lexsimoes/promptpro/pull/7) stays in draft. It adds the shared class-gated handler, Node/Netlify adapters, whole-site edge host guard, UI and four new invariant files. Demo files, AI source, existing tests and CI are untouched. Vite 8.3.5 is development-only; fonts are official local WOFF2 files with complete OFL licenses. Local checks passed: 166 unit tests, 16 invariants and 20 mock eval cases. Five deliberate violations failed in a disposable copy. Browser flows were checked in both themes at 375, 768 and 1280 px; 32 captures at 375 and 1280 px are included. [Evidence, security review and Preview steps](evidence/0004/README.md).
 
@@ -35,7 +41,7 @@ Owner selected deepseek-flash, initialv2+exact behavior-only sentence; two calib
 
 ## Queue (next items)
 
-1. Mission 0004: implementation complete locally, awaits owner review/hosted Preview/Ready. Former 0002 items 4–9 (endpoint/access/limits, INV-003–006, UI), same authorizations/prohibitions/acceptance; one planned review stop before Ready. Built next to the demo.
+1. Mission 0004 followed by mission 0005 public access: PR #7 remains draft, then the separate public-access PR; owner merges before production publication. Original mission 0004: implementation complete locally, awaits owner review/hosted Preview/Ready. Former 0002 items 4–9 (endpoint/access/limits, INV-003–006, UI), same authorizations/prohibitions/acceptance; one planned review stop before Ready. Built next to the demo.
 2. Mission 0003, items 2–4: end-to-end tests, after 0004 is merged.
 3. Mission 0001: remove the template's demo app, last, once promptPRO replaces each of its pieces (reordered on 2026-10-27: the template's tooling tests depend on the demo).
 

@@ -27,7 +27,7 @@ export function startServer(port = Number(process.env.PORT ?? 3030)) {
         }
         const headers = new Headers();
         for (const [key, value] of Object.entries(req.headers)) if (typeof value === "string") headers.set(key, value);
-        await send(await handler(new Request(url, { method: req.method, headers, ...(!["GET", "HEAD"].includes(req.method ?? "GET") ? { body: Buffer.concat(chunks) } : {}) })));
+        await send(await handler(new Request(url, { method: req.method, headers, ...(!["GET", "HEAD"].includes(req.method ?? "GET") ? { body: Buffer.concat(chunks) } : {}) }), req.socket.remoteAddress));
         return;
       }
       if (!["GET", "HEAD"].includes(req.method ?? "")) { await send(reply(405, { error: "Use o formulário." })); return; }

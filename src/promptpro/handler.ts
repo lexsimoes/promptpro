@@ -3,9 +3,10 @@ import type { LLMClient } from "../ai/llm.ts";
 import { validClass } from "./access.ts";
 import type { ClassCode } from "./access.ts";
 import { reply, allowedHost } from "./security.ts";
+import { createIpLimiter } from "./ip-limit.ts";
 
 export const MAX_BODY_BYTES = 16384;
-interface Options { classes: ClassCode[]; client: () => LLMClient; e2e?: boolean; previewHost?: string; now?: () => number }
+interface Options { classes: ClassCode[]; client: () => LLMClient; e2e?: boolean; previewHost?: string; now?: () => number; publicAccess?: boolean }
 async function body(request: Request): Promise<Record<string, unknown>> {
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) throw new Error("body");
   if (Number(request.headers.get("content-length") ?? 0) > MAX_BODY_BYTES) throw new Error("body");
@@ -28,10 +29,11 @@ async function body(request: Request): Promise<Record<string, unknown>> {
   return value as Record<string, unknown>;
 }
 /** Single boundary used by Netlify and local Node; never logs or persists request content. */
-export function createHandler(options: Options): (request: Request) => Promise<Response> {
+export function createHandler(options: Options): (request: Request, clientIp?: string) => Promise<Response> {
   const attempts = new Map<string, number>(); // Best effort, instance-local; reserve before awaiting the provider.
   const now = options.now ?? Date.now;
-  return async (request) => {
+  const takeIpAttempt = createIpLimiter(now);
+  return async (request, clientIp) => {
     const url = new URL(request.url);
     if (!allowedHost(request, options.e2e, options.previewHost)) return reply(403, { error: "Este endereço não está ativo. Use o link da sua turma." });
     if (!["/api/access", "/api/generate"].includes(url.pathname)) return reply(404, { error: "Página não encontrada." });
@@ -40,18 +42,31 @@ export function createHandler(options: Options): (request: Request) => Promise<R
     let data: Record<string, unknown>;
     try { data = await body(request); } catch { return reply(400, { error: "Confira os dados e tente novamente." }); }
     if (Object.keys(data).some((key) => !["code", "idea", "projectStatus"].includes(key))) return reply(400, { error: "Confira os dados e tente novamente." });
-    if (data.code === undefined || data.code === "") return reply(401, { error: "Este link não está ativo. Peça o link atualizado da turma." });
-    if (typeof data.code !== "string" || data.code.length > 128) return reply(403, { error: "Este link não está ativo. Peça o link atualizado da turma." });
-    const classroom = validClass(options.classes, data.code, now());
-    if (!classroom) return reply(403, { error: "Este link não está ativo. Peça o link atualizado da turma." });
+    // The class path is retained only for the old isolated fixtures, never in the hosted runtime.
+    const classroom = options.publicAccess ? undefined : validClass(options.classes, data.code, now());
+    if (!options.publicAccess) {
+      if (data.code === undefined || data.code === "") return reply(401, { error: "Este link não está ativo. Peça o link atualizado da turma." });
+      if (typeof data.code !== "string" || data.code.length > 128 || !classroom) return reply(403, { error: "Este link não está ativo. Peça o link atualizado da turma." });
+    }
     if (url.pathname === "/api/access") return reply(200, { active: true });
     if (typeof data.idea !== "string" || !data.idea.trim() || data.idea.length > MAX_IDEA_CHARS ||
         (data.projectStatus !== undefined && data.projectStatus !== "new" && data.projectStatus !== "existing")) {
       return reply(400, { error: "Escreva uma ideia com até 2.000 caracteres e tente novamente." });
     }
-    const used = attempts.get(classroom.code) ?? 0;
-    if (used >= classroom.limit) return reply(429, { error: "A turma chegou ao limite por enquanto. Sua ideia continua aqui; fale com o responsável pelo curso." });
-    attempts.set(classroom.code, used + 1);
+    if (options.publicAccess) {
+      const reservation = takeIpAttempt(clientIp);
+      if (reservation.status !== 200) {
+        const response = reply(reservation.status, { error: reservation.status === 429 ?
+          "Você chegou ao limite de 10 gerações por hora nesta rede. Sua ideia continua aqui; tente novamente mais tarde." :
+          "Não foi possível conferir o limite de uso. Sua ideia continua aqui. Tente novamente mais tarde." });
+        if (reservation.retryAfter) response.headers.set("Retry-After", String(reservation.retryAfter));
+        return response;
+      }
+    } else if (classroom) {
+      const used = attempts.get(classroom.code) ?? 0;
+      if (used >= classroom.limit) return reply(429, { error: "A turma chegou ao limite por enquanto. Sua ideia continua aqui; fale com o responsável pelo curso." });
+      attempts.set(classroom.code, used + 1);
+    }
     try {
       const result = await generatePrompt(data.idea, options.client(), data.projectStatus);
       if (result.needsHuman) return reply(502, { error: "Não foi possível gerar o prompt. Sua ideia continua aqui. Tente novamente." });
