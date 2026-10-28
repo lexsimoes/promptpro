@@ -20,7 +20,7 @@ What the agent **may** do without asking:
 
 What the agent **may not** do (it stops and asks):
 - change application code to make a test pass (open an issue for the bug instead);
-- change `e2e/fixtures.ts` or `playwright.config.ts` (for example, to plug in the mock model): stop and ask; it needs the owner's `test-approved` (`AGENTS.md` 1.3);
+- change `e2e/fixtures.ts` or `playwright.config.ts`: stop and ask; it needs the owner's `test-approved` (`AGENTS.md` 1.3). Expected once: adding promptPRO's server, in its isolated mode with the mock provider, as a second `webServer` next to the demo's (mission 0001 removes the demo's);
 - skip, focus or mark `fixme` any test; weaken a test already merged (needs the owner's `test-approved`);
 - touch `tests/invariants/`.
 
