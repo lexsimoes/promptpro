@@ -8,7 +8,7 @@
   directory = "src/promptpro/functions"
   node_bundler = "esbuild"
 # Runtime override AWS_LAMBDA_JS_RUNTIME must be set in the UI, not here.
-# /api/generate rateLimit is exported by functions/generate.ts (10/3600s/domain+IP).
+# /api/generate rateLimit is exported by functions/generate.ts (60/60s/domain+IP; hourly quota uses Blobs).
 [[headers]]
   for = "/*"
   [headers.values]

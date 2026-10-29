@@ -2,6 +2,15 @@ import { createLLMClient } from "../ai/llm.ts";
 import { createHandler } from "./handler.ts";
 import { createPromptMock } from "./mock.ts";
 import { reply } from "./security.ts";
+import { getStore } from "@netlify/blobs";
+import { createHash } from "node:crypto";
+import { createSharedIpLimiter } from "./shared-quota.ts";
+
+export function quotaNamespace(mode: string, previewHost?: string): string {
+  if (mode === "production") return "promptpro-ip-production";
+  if (mode === "preview" && previewHost) return "promptpro-ip-preview-" + createHash("sha256").update(previewHost).digest("hex").slice(0, 16);
+  throw new Error("Invalid quota namespace");
+}
 export function providerFor(env: NodeJS.ProcessEnv): string {
   if (env.APP_ENV === "e2e") {
     if (env.LLM_PROVIDER !== "mock") throw new Error("Isolated mode accepts only the mock provider");
@@ -18,7 +27,11 @@ export function createRuntime(env: NodeJS.ProcessEnv = process.env) {
   const previewHost = env.APP_ENV === "preview" ? env.PREVIEW_HOST : undefined;
   if (env.APP_ENV === "preview" && (!previewHost || !/^[a-z0-9-]+\.netlify\.app$/.test(previewHost))) throw new Error("Invalid preview host");
   let client: ReturnType<typeof createLLMClient> | undefined;
-  const app = createHandler({ classes: [], publicAccess: true, e2e, previewHost, client: () => client ??= e2e ? createPromptMock() : createLLMClient({ provider }) });
+  const reserveIp = e2e ? undefined : createSharedIpLimiter((signal) => getStore({
+    name: quotaNamespace(env.APP_ENV!, previewHost), consistency: "strong",
+    fetch: (input, init) => fetch(input, { ...init, signal }),
+  }));
+  const app = createHandler({ reserveIp, classes: [], publicAccess: true, e2e, previewHost, client: () => client ??= e2e ? createPromptMock() : createLLMClient({ provider }) });
   // Mock-only isolated calls use loopback; real deployments must supply platform context.ip.
   return (request: Request, clientIp?: string) => app(request, clientIp ?? (e2e ? "127.0.0.1" : undefined));
 }

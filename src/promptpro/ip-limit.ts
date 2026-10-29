@@ -5,7 +5,7 @@ export const IP_LIMIT = 10;
 export const IP_WINDOW_MS = 60 * 60 * 1000;
 const MAX_BUCKETS = 10000;
 
-function normalize(ip: unknown): string | undefined {
+export function normalizeIp(ip: unknown): string | undefined {
   if (typeof ip !== "string" || !isIP(ip) || ip.includes("%")) return;
   if (isIP(ip) === 4) return ip;
   const canonical = new URL(`http://[${ip}]/`).hostname;
@@ -15,14 +15,12 @@ function normalize(ip: unknown): string | undefined {
   return [high >> 8, high & 255, low >> 8, low & 255].join(".");
 }
 
-/** Immediate instance-local backstop. Netlify's edge rule supplies the shared limiter.
- * No raw address or request content is logged or persisted. Cold starts reset this map.
- */
+/** Isolated mock/legacy fixtures only. Hosted runtimes always inject the shared limiter. */
 export function createIpLimiter(now: () => number = Date.now) {
   const salt = randomBytes(32);
   const buckets = new Map<string, { used: number; expires: number }>();
   return (ip: unknown): { status: 200 | 429 | 503; retryAfter?: number } => {
-    const address = normalize(ip);
+    const address = normalizeIp(ip);
     if (!address) return { status: 503 };
     const time = now();
     const key = createHmac("sha256", salt).update(address).digest("hex");

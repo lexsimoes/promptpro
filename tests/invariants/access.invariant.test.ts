@@ -2,6 +2,7 @@ import { test } from "node:test";
 import assert from "node:assert/strict";
 import { publicHarness, publicRequest } from "../helpers/public-promptpro.ts";
 import { IP_WINDOW_MS } from "../../src/promptpro/ip-limit.ts";
+import { quotaStores } from "../helpers/quota-store.ts";
 import { config } from "../../src/promptpro/functions/generate.ts";
 
 test("INV-003: public generation needs no class code, but requires a trusted client IP", async () => {
@@ -31,11 +32,17 @@ test("INV-003: ten attempts per IP per hour; refusal happens before the model", 
   assert.equal(h.calls.length, 12);
 });
 test("INV-003 catches bypassed quotas: concurrent and failed attempts cannot exceed ten completions", async () => {
-  const h = publicHarness({ fail: true });
-  const responses = await Promise.all(Array.from({ length: 11 }, () => h.app(publicRequest(), "192.0.2.1")));
+  const store = quotaStores();
+  const left = publicHarness({ fail: true, store: store.client });
+  const right = publicHarness({ fail: true, store: store.client });
+  const responses = await Promise.all(Array.from({ length: 11 }, (_, i) => (i % 2 ? left : right).app(publicRequest(), "192.0.2.1")));
   assert.equal(responses.filter((r) => r.status === 502).length, 10);
   assert.equal(responses.filter((r) => r.status === 429).length, 1);
-  assert.equal(h.calls.length, 10); assert.equal(h.factories(), 10);
+  assert.equal(left.calls.length + right.calls.length, 10);
+  assert.equal(left.factories() + right.factories(), 10);
+  const restarted = publicHarness({ store: store.client });
+  assert.equal((await restarted.app(publicRequest(), "192.0.2.1")).status, 429);
+  assert.equal(restarted.factories(), 0);
   assert.equal(config.path, "/api/generate");
-  assert.deepEqual(config.rateLimit, { windowLimit: 10, windowSize: 3600, aggregateBy: ["domain", "ip"] });
+  assert.deepEqual(config.rateLimit, { windowLimit: 60, windowSize: 60, aggregateBy: ["domain", "ip"] });
 });

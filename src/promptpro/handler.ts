@@ -4,9 +4,10 @@ import { validClass } from "./access.ts";
 import type { ClassCode } from "./access.ts";
 import { reply, allowedHost } from "./security.ts";
 import { createIpLimiter } from "./ip-limit.ts";
+import type { Reservation } from "./shared-quota.ts";
 
 export const MAX_BODY_BYTES = 16384;
-interface Options { classes: ClassCode[]; client: () => LLMClient; e2e?: boolean; previewHost?: string; now?: () => number; publicAccess?: boolean }
+interface Options { classes: ClassCode[]; client: () => LLMClient; e2e?: boolean; previewHost?: string; now?: () => number; publicAccess?: boolean; reserveIp?: (ip: unknown) => Promise<Reservation> | Reservation }
 async function body(request: Request): Promise<Record<string, unknown>> {
   if (!request.headers.get("content-type")?.toLowerCase().startsWith("application/json")) throw new Error("body");
   if (Number(request.headers.get("content-length") ?? 0) > MAX_BODY_BYTES) throw new Error("body");
@@ -32,7 +33,7 @@ async function body(request: Request): Promise<Record<string, unknown>> {
 export function createHandler(options: Options): (request: Request, clientIp?: string) => Promise<Response> {
   const attempts = new Map<string, number>(); // Best effort, instance-local; reserve before awaiting the provider.
   const now = options.now ?? Date.now;
-  const takeIpAttempt = createIpLimiter(now);
+  const takeIpAttempt = options.reserveIp ?? createIpLimiter(now);
   return async (request, clientIp) => {
     const url = new URL(request.url);
     if (!allowedHost(request, options.e2e, options.previewHost)) return reply(403, { error: "Este endereço não está ativo. Use o link da sua turma." });
@@ -54,7 +55,7 @@ export function createHandler(options: Options): (request: Request, clientIp?: s
       return reply(400, { error: "Escreva uma ideia com até 2.000 caracteres e tente novamente." });
     }
     if (options.publicAccess) {
-      const reservation = takeIpAttempt(clientIp);
+      const reservation = await takeIpAttempt(clientIp);
       if (reservation.status !== 200) {
         const response = reply(reservation.status, { error: reservation.status === 429 ?
           "Você chegou ao limite de 10 gerações por hora nesta rede. Sua ideia continua aqui; tente novamente mais tarde." :

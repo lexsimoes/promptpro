@@ -6,7 +6,7 @@
 
 ## 1. Goal
 
-Help students of the owner's vibe-coding course and other beginners turn an idea written in their own words into a structured prompt (objective, context, requirements, constraints, completion criteria, open questions) ready to paste into Claude Code, Codex or another coding agent, without inventing features or technologies. Access is public, without a class code, account or database. Owner decision, 2026-10-28: configure 10 generation attempts per IP per hour, including retries and new versions.
+Help students of the owner's vibe-coding course and other beginners turn an idea written in their own words into a structured prompt (objective, context, requirements, constraints, completion criteria, open questions) ready to paste into Claude Code, Codex or another coding agent, without inventing features or technologies. Access is public, without a class code or account; only derived IP quota records use Netlify Blobs (owner exception, 2026-10-28). Owner decision, 2026-10-28: configure 10 generation attempts per IP per hour, including retries and new versions.
 
 ## 2. Users
 
@@ -36,7 +36,7 @@ Rules that can **never** break. Each one has a test in `tests/invariants/` that 
 
 | ID | Rule | Test |
 |---|---|---|
-| INV-003 | Public generation requires a trusted server-supplied client IP. Reserve an instance-local quota before each model call (10 attempts per IP per hour), refuse exhausted or unavailable quotas before the model, and configure the Netlify shared edge rule to 10 requests/3,600 seconds/domain+IP | `tests/invariants/access.invariant.test.ts` |
+| INV-003 | Public generation requires a trusted server-supplied client IP. Atomically reserve a shared quota before each model call (10 attempts per IP per hour), using a trusted server IP; refuse exhausted, missing or unavailable quotas before the model. Quotas survive restarts and deployments | `tests/invariants/access.invariant.test.ts` |
 | INV-004 | The model API key and the class codes stay on the server: never in client code, a response body or a forwarded error | `tests/invariants/server-secrets.invariant.test.ts` |
 | INV-005 | The student's text (idea and edited prompt) is never persisted nor written to the application's logs | `tests/invariants/student-content.invariant.test.ts` |
 | INV-006 | Every model call has a capped input and a capped output; an idea over the limit is rejected before any call | `tests/invariants/model-limits.invariant.test.ts` |
@@ -46,12 +46,10 @@ Rules that can **never** break. Each one has a test in `tests/invariants/` that 
 - Missing or invalid trusted IP, even with forwarded-IP headers supplied by the caller → refused (503), 0 calls.
 - Ten attempts from one IP → ten calls; the eleventh → refused (429), no additional call. A different IP has its own quota.
 - Just before the one-hour window expires → refused; at expiry → allowed again. Failed and concurrent attempts consume reservations too.
-- The function's exported native rule is 10 requests/3,600 seconds/domain+IP.
-- Catches a violation: allow eleven calls, accept a missing trusted IP, or weaken the native window → the invariant suite fails.
+- Independent clients and restarted servers share the same reservations; storage errors, corrupt records and unresolved write conflicts → refused before the model.
+- Catches a violation: allow eleven calls, accept a missing trusted IP or remove conditional writes → the invariant suite fails.
 
-Hosted validation blocker (mission 0005): Netlify rejected 3,600 seconds; its accepted range is 10–180. The public quota is not complete; do not launch before an owner-approved shared counter is verified.
-
-The platform rule counts requests, including invalid ones; the local backstop counts validated generation attempts. Netlify enforcement can lag by up to ten seconds. The memory backstop is immediate only within one instance and resets on cold starts; it is not a distributed hard quota. Shared networks share a quota; address rotation can evade per-IP limits. No IP limit guarantees a global spending ceiling. Keep the separately funded provider account with auto-recharge off before launch. [Netlify enforcement timing](https://docs.netlify.com/manage/security/secure-access-to-sites/rate-limiting/#enforcement-timing).
+Owner-approved storage exception: exact @netlify/blobs 11.1.7, strongly consistent reads and atomic conditional writes; Preview namespaces are separate from Production and stable across deploys. Only a derived IP identifier, count and logical expiry are stored, plus a private store salt; no idea, prompt or raw IP. Expired records reset atomically on reuse; automatic physical deletion is not configured. Storage errors fail closed without a memory fallback. Netlify rejected the original 3,600-second rule; the valid 60/60s/domain+IP rule provides supplemental burst mitigation. Shared networks share the hourly quota; address rotation can evade it. Keep the separate prepaid provider account with auto-recharge off as the global spending boundary.
 
 ### INV-004 cases
 - Built client assets (everything served to the browser) → contain neither the model key value nor any class code from the test environment.
@@ -75,7 +73,7 @@ Outside these tests: how long the AI provider keeps the requests (its data-reten
 
 ## 5. Out of scope
 
-- Individual accounts, logins, passwords and a database.
+- Individual accounts, logins, passwords and a product database; the approved shared quota store is the only storage exception.
 - Prompt history.
 - Payments.
 - Running the generated prompt, or any agent, from the app.
@@ -95,10 +93,10 @@ Updated on every mission, by the agent, in the mission's PR. Every Monday, the `
 | CA-03 | `docs/evidence/0004/README.md` (local; hosted Preview pending) | ✅ |
 | CA-04 | `docs/evidence/0004/README.md` (local; hosted Preview pending) | ✅ |
 | CA-05 | `docs/evidence/0004/README.md` (local; hosted Preview pending) | ✅ |
-| CA-06 | `tests/invariants/access.invariant.test.ts`; `docs/evidence/0005/README.md` (public flow verified; native one-hour quota rejected) | ❌ |
+| CA-06 | `tests/invariants/access.invariant.test.ts`; `docs/evidence/0005/README.md` (shared quota verified locally; hosted validation pending) | 🟡 |
 | CA-07 | `tests/unit/promptpro-server.test.ts` (local; hosted Preview pending) | ✅ |
 | CA-08 | `docs/evidence/0004/README.md` (local; hosted Preview pending) | ✅ |
-| INV-003 | `tests/invariants/access.invariant.test.ts`; `docs/evidence/0005/README.md` (local backstop verified; native one-hour quota rejected) | ❌ |
+| INV-003 | `tests/invariants/access.invariant.test.ts`; `docs/evidence/0005/README.md` (shared quota and CAS violations verified locally; hosted persistence pending) | 🟡 |
 | INV-004 | `tests/invariants/server-secrets.invariant.test.ts` (local; hosted Preview pending) | ✅ |
 | INV-005 | `tests/invariants/student-content.invariant.test.ts` (local; hosted Preview pending) | ✅ |
 | INV-006 | `tests/invariants/model-limits.invariant.test.ts` (local; hosted Preview pending) | ✅ |
