@@ -115,3 +115,9 @@ Official documentation checked on 2026-10-28 after Context7's quota was exhauste
 ## Not verified
 
 Hosted Preview, its real-provider integration, fresh real-model/judge evaluation, Netlify edge/rate/secret settings and logs, DeepSeek retention and actual billing, complete WCAG/screen-reader accessibility and field performance. Formal promptPRO e2e automation remains mission 0003; the current CI e2e still measures the demo. Automatic review waits for Ready. No merge, tag, release or product production deployment was performed. The separate secret-free main bootstrap and publishing lock are recorded above.
+
+## Automated review triage — PR #7
+
+Initial Claude Sonnet review: 0 blockers, 3 important, 2 suggestions; estimated USD 0.1668. Low-risk fixes: native 60/60s protection on /api/access; privacy copy states the app does not save text and sends it to AI (provider retention remains unverified); clipboard failures now reach the selection fallback even if the API is absent or throws. A new DOM regression test reproduces the old failure and checks exact edited copy plus missing/denied API behavior.
+
+Remaining: full client e2e coverage is the tracked mission 0003 (outside this mission); the copy regression adds partial automated client coverage. The shared build-directory suggestion touches tests/invariants/server-secrets.invariant.test.ts, so it was not auto-fixed; the owner must decide. No existing test or protected path was changed in this fix commit.

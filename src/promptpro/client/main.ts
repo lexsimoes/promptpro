@@ -66,7 +66,7 @@ idea.addEventListener("input", update); prompt.addEventListener("input", update)
 element("idea-form").addEventListener("submit", (event) => { event.preventDefault(); void run(false); });
 regenerate.addEventListener("click", () => { void run(true); });
 copy.addEventListener("click", () => {
-  void navigator.clipboard.writeText(prompt.value).then(() => {
+  void Promise.resolve().then(() => navigator.clipboard.writeText(prompt.value)).then(() => {
     element("copy-status").textContent = "O prompt foi copiado com suas edições.";
   }).catch(() => {
     prompt.focus(); prompt.select(); element("copy-status").textContent = "Não foi possível copiar automaticamente. O texto está selecionado; use a opção Copiar do seu dispositivo.";
