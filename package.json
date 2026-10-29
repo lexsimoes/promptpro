@@ -25,7 +25,8 @@
     "start:promptpro": "node src/promptpro/server.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "0.134.0"
+    "@anthropic-ai/sdk": "0.134.0",
+    "@netlify/blobs": "11.1.7"
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",

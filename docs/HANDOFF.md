@@ -15,7 +15,17 @@
 - Secrets set (names only): `REVIEW_API_KEY`, `REVIEW_DEEP_API_KEY`, `EVAL_API_KEY`. Reviewer: DeepSeek, Claude on sensitive paths. Conversation language: `pt-BR`.
 - Way of working: Codex implements the missions; Claude Code writes the prompts for Codex, reviews its results, and writes the end-to-end tests (mission 0003).
 
-## Active: mission 0004, final review stop
+## Active: mission 0005, public access and shared quotas
+
+Owner decision, 2026-10-28: public access without class codes, 10 attempts/IP/hour, replacement of INV-003 and production publication on getprompt.pro. Netlify rejected the native one-hour window (only 10–180 seconds), so Preview #8 was disabled. The owner then approved Netlify Blobs on the existing account and exact @netlify/blobs 11.1.7; no other dependency/account upgrade is authorized. The owner applied invariant-approved to #8.
+
+[PR #8](https://github.com/lexsimoes/promptpro/pull/8) targets #7's branch for a focused, capped review. No merge/owner label was performed by the agent. Shared Blobs reservations use trusted context.ip/socket identity, strong reads and atomic conditional writes; stable Production/Preview namespaces are separate. They store only derived IP identifiers, counts, expiry and a private store salt. No text/raw IP is persisted. Local verification: 175 unit tests, 16 invariants and three detected mutations; hosted persistence is pending. Preview #8 remains disabled until that check. [Mission/evidence](missions/0005-public-ip-access.md).
+
+The two earlier TEST-provider generations, edited copy and regeneration passed before the invalid native quota was found. The 60/60s edge rule is now supplemental burst mitigation; the shared store enforces the hour. CLASS_CODES_JSON is unused in hosted runtimes; legacy helpers remain for unchanged isolated tests. Records expire logically and reset on reuse; physical TTL deletion is not configured. Shared networks share quotas; IP rotation can bypass them, so the provider prepaid balance remains the global cost boundary.
+
+Production publication is authorized, but the owner merges the reviewed dependent PRs and enters production credentials privately. DNS/HTTPS, budget/retention and hosted quota verification remain pending. #7's historical class-access report follows; the latest PRD supersedes its class-only requirements.
+
+## Mission 0004, final review stop (historical class-access implementation)
 
 PR #6 merged at e643a86. Items 1–6 are implemented on `mission/0004-generate-endpoint-and-ui`; the mission's single [PR #7](https://github.com/lexsimoes/promptpro/pull/7) stays in draft. It adds the shared class-gated handler, Node/Netlify adapters, whole-site edge host guard, UI and four new invariant files. Demo files, AI source, existing tests and CI are untouched. Vite 8.3.5 is development-only; fonts are official local WOFF2 files with complete OFL licenses. Local checks passed: 166 unit tests, 16 invariants and 20 mock eval cases. Five deliberate violations failed in a disposable copy. Browser flows were checked in both themes at 375, 768 and 1280 px; 32 captures at 375 and 1280 px are included. [Evidence, security review and Preview steps](evidence/0004/README.md).
 
@@ -35,7 +45,7 @@ Owner selected deepseek-flash, initialv2+exact behavior-only sentence; two calib
 
 ## Queue (next items)
 
-1. Mission 0004: implementation complete locally, awaits owner review/hosted Preview/Ready. Former 0002 items 4–9 (endpoint/access/limits, INV-003–006, UI), same authorizations/prohibitions/acceptance; one planned review stop before Ready. Built next to the demo.
+1. Mission 0004 followed by mission 0005 public access: PR #7 remains draft, then the separate public-access PR; owner merges before production publication. Original mission 0004: implementation complete locally, awaits owner review/hosted Preview/Ready. Former 0002 items 4–9 (endpoint/access/limits, INV-003–006, UI), same authorizations/prohibitions/acceptance; one planned review stop before Ready. Built next to the demo.
 2. Mission 0003, items 2–4: end-to-end tests, after 0004 is merged.
 3. Mission 0001: remove the template's demo app, last, once promptPRO replaces each of its pieces (reordered on 2026-10-27: the template's tooling tests depend on the demo).
 
